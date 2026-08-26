@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyBitByte – Cybersecurity</title>
+    <title>MyBitByte – Terminal</title>
     <style>
-        /* ─────────── HACKER / MATRIX THEME ─────────── */
+        /* ============================================
+           HACKER / MATRIX TERMINAL
+           ============================================ */
         * {
             margin: 0;
             padding: 0;
@@ -13,179 +15,149 @@
         }
 
         body {
-            background: #000;
+            background: #0a0a0a;
             color: #00ff41;
             font-family: 'Courier New', monospace;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
-        .container {
+        .terminal-window {
             max-width: 900px;
             width: 100%;
+            background: #0a0a0a;
             border: 1px solid #00ff41;
-            padding: 2.5rem;
             border-radius: 12px;
             box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
-            background: #0a0a0a;
+            padding: 1.5rem 1.8rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ─── Terminal Prompt ─── */
-        .terminal {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
+        /* Terminal header (like real terminal tabs) */
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.8rem;
             border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            margin-bottom: 1rem;
         }
 
-        .prompt {
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-red {
+            background: #ff5f56;
+        }
+        .dot-yellow {
+            background: #ffbd2e;
+        }
+        .dot-green {
+            background: #27c93f;
+        }
+
+        .terminal-title {
+            color: rgba(0, 255, 65, 0.5);
+            font-size: 0.8rem;
+            margin-left: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Output area */
+        #output {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 500px;
+        }
+
+        #output .prompt {
             color: #00ff41;
         }
 
-        .command {
+        #output .command {
             color: #69f0ae;
         }
 
-        .output {
+        #output .output {
             color: #b9f6ca;
         }
 
-        /* ─── Headers ─── */
-        h1 {
-            font-size: 2.8rem;
+        #output .error {
+            color: #ff1744;
+        }
+
+        #output .highlight {
+            color: #ffea00;
+        }
+
+        /* Input line */
+        .input-line {
+            display: flex;
+            align-items: center;
+            border-top: 1px solid rgba(0, 255, 65, 0.1);
+            padding-top: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .input-line .prompt-symbol {
             color: #00ff41;
-            text-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
-            margin-bottom: 0.5rem;
+            font-weight: bold;
+            margin-right: 0.6rem;
+            white-space: nowrap;
         }
 
-        h1 span {
-            color: #69f0ae;
-        }
-
-        h2 {
-            color: #00e676;
-            border-left: 4px solid #00ff41;
-            padding-left: 1rem;
-            margin: 2rem 0 1rem 0;
-        }
-
-        h3 {
-            color: #69f0ae;
-            margin: 1.5rem 0 0.5rem 0;
-        }
-
-        /* ─── Links ─── */
-        a {
-            color: #69f0ae;
-            text-decoration: none;
-            border-bottom: 1px dotted #00ff41;
-            transition: 0.3s;
-        }
-
-        a:hover {
+        #command-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
             color: #00ff41;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            caret-color: #00ff41;
         }
 
-        /* ─── Badges ─── */
-        .badge {
-            display: inline-block;
+        #command-input::selection {
             background: #00ff41;
             color: #000;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0.2rem 0.4rem 0.2rem 0;
         }
 
-        .badge-dark {
-            background: #000;
-            color: #00ff41;
-            border: 1px solid #00ff41;
+        /* Scrollbar */
+        #output::-webkit-scrollbar {
+            width: 6px;
         }
-
-        /* ─── Code Blocks ─── */
-        pre {
+        #output::-webkit-scrollbar-track {
             background: #0a0a0a;
-            border: 1px solid #00ff41;
-            border-radius: 8px;
-            padding: 1.2rem;
-            margin: 1rem 0;
-            overflow-x: auto;
-            color: #c9d1d9;
-            font-size: 0.85rem;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.05);
         }
-
-        code {
-            font-family: 'Courier New', monospace;
-        }
-
-        /* ─── Glow Box ─── */
-        .glow-box {
-            border: 1px solid #00ff41;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
-            padding: 1.5rem;
-            border-radius: 8px;
-            background: rgba(0, 255, 65, 0.03);
-            margin: 1rem 0;
-        }
-
-        /* ─── Footer ─── */
-        .footer {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0, 255, 65, 0.2);
-            text-align: center;
-            font-size: 0.8rem;
-            color: rgba(0, 255, 65, 0.5);
-        }
-
-        .footer a {
-            color: rgba(0, 255, 65, 0.6);
-            border-bottom: none;
-        }
-
-        .footer a:hover {
-            color: #00ff41;
-        }
-
-        /* ─── Cursor Blink ─── */
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.2em;
+        #output::-webkit-scrollbar-thumb {
             background: #00ff41;
-            margin-left: 4px;
-            animation: blink 1s step-end infinite;
-            vertical-align: text-bottom;
+            border-radius: 4px;
         }
 
-        @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
-        }
-
-        /* ─── Responsive ─── */
+        /* Responsive */
         @media (max-width: 600px) {
-            .container {
-                padding: 1.5rem;
+            .terminal-window {
+                padding: 1rem;
             }
-            h1 {
-                font-size: 2rem;
+            #output {
+                font-size: 0.8rem;
+                max-height: 350px;
             }
-            .terminal {
+            #command-input {
                 font-size: 0.8rem;
             }
         }
@@ -193,91 +165,226 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="terminal-window">
 
-        <!-- ─── TERMINAL ─── -->
-        <div class="terminal">
+        <!-- Terminal header with dots -->
+        <div class="terminal-header">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="terminal-title">root@mybitbyte:~/terminal</span>
+        </div>
+
+        <!-- Output area -->
+        <div id="output">
             <span class="prompt">root@mybitbyte:~$</span>
             <span class="command"> whoami</span><br />
             <span class="output">Cybersecurity Engineer | Penetration Tester</span><br />
             <span class="prompt">root@mybitbyte:~$</span>
-            <span class="command"> ls -la</span><br />
-            <span class="output">total 42</span><br />
-            <span class="output">drwxr-xr-x  root  root  4096  .</span><br />
-            <span class="output">drwxr-xr-x  root  root  4096  ..</span><br />
-            <span class="output">-rw-r--r--  root  root   420  about.md</span><br />
-            <span class="output">-rw-r--r--  root  root   1337 projects/</span><br />
-            <span class="output">-rw-r--r--  root  root   9001 resources/</span><br />
+            <span class="command"> ls</span><br />
+            <span class="output">about.md  projects/  resources/  README.md</span><br />
             <span class="prompt">root@mybitbyte:~$</span>
             <span class="command"> <span style="color:#00ff41;">█</span></span>
         </div>
 
-        <!-- ─── HERO ─── -->
-        <h1>🖥️ My<span>Bit</span>Byte</h1>
-        <p style="color:#69f0ae; font-size:1.1rem; margin-bottom:1.5rem;">
-            Breaking systems. Building security.
-        </p>
-
-        <p>
-            <span class="badge">Penetration Testing</span>
-            <span class="badge badge-dark">Red Teaming</span>
-            <span class="badge">Exploit Development</span>
-            <span class="badge badge-dark">Security Research</span>
-        </p>
-
-        <!-- ─── ABOUT ─── -->
-        <h2>⛓️ About</h2>
-        <p>
-            Cybersecurity engineer with <strong>7+ years</strong> of experience in offensive security.
-            Specializing in penetration testing, red teaming, and vulnerability research.
-        </p>
-
-        <!-- ─── PROJECTS ─── -->
-        <h2>💀 Featured Projects</h2>
-
-        <div class="glow-box">
-            <h3>🔓 CVE-2024-12345 – Critical RCE</h3>
-            <p>Discovered a critical remote code execution vulnerability affecting XYZ Framework version 2.x.</p>
-            <p><strong>CVSS Score:</strong> 9.8 (Critical)</p>
-            <p><a href="#">📖 Read Full Write-up</a></p>
-        </div>
-
-        <div class="glow-box">
-            <h3>🎰 HackSmarter – Casino</h3>
-            <p>Complete walkthrough of the Casino machine from HackSmarter Labs.</p>
-            <p><strong>Difficulty:</strong> Medium</p>
-            <p><a href="#">📖 Read Write-up</a></p>
-        </div>
-
-        <!-- ─── RESOURCES ─── -->
-        <h2>📚 Resources</h2>
-        <ul style="list-style:none; padding-left:0;">
-            <li style="margin:0.5rem 0;">🔗 <a href="#">OWASP Top 10</a></li>
-            <li style="margin:0.5rem 0;">🔗 <a href="#">Exploit Database</a></li>
-            <li style="margin:0.5rem 0;">🔗 <a href="#">HackTheBox</a></li>
-            <li style="margin:0.5rem 0;">🔗 <a href="#">TryHackMe</a></li>
-        </ul>
-
-        <!-- ─── SOCIAL ─── -->
-        <h2>📡 Connect</h2>
-        <p>
-            <a href="https://github.com/donmedfor" target="_blank">GitHub</a> &middot;
-            <a href="#">LinkedIn</a> &middot;
-            <a href="#">Twitter</a> &middot;
-            <a href="mailto:your.email@example.com">Email</a>
-        </p>
-
-        <!-- ─── FOOTER ─── -->
-        <div class="footer">
-            <p>
-                © 2024 MyBitByte &middot;
-                <a href="https://github.com/donmedfor/mybitbyte" target="_blank">Source</a>
-                &middot; <span style="color:#00ff41;">🔰</span>
-                <span class="cursor"></span>
-            </p>
+        <!-- Input line -->
+        <div class="input-line">
+            <span class="prompt-symbol">root@mybitbyte:~$</span>
+            <input type="text" id="command-input" autofocus spellcheck="false" autocomplete="off" />
         </div>
 
     </div>
+
+    <script>
+        // ============================================
+        // INTERACTIVE TERMINAL ENGINE
+        // ============================================
+
+        const output = document.getElementById('output');
+        const input = document.getElementById('command-input');
+
+        // ── Command history (up/down arrows) ──
+        let history = [];
+        let historyIndex = -1;
+
+        // ── Available commands ──
+        const commands = {
+
+            help: () => {
+                return `
+        Available commands:
+          help      Show this help
+          whoami    Display user info
+          ls        List directory contents
+          date      Show current date & time
+          echo      Print a message (usage: echo "hello")
+          clear     Clear the terminal
+          matrix    🟢 Show the Matrix quote
+          hack      💻 Simulate hacking (just for fun)
+          sudo      Try to become root (easter egg)
+        `;
+            },
+
+            whoami: () => {
+                return 'Cybersecurity Engineer | Penetration Tester';
+            },
+
+            ls: () => {
+                return 'about.md  projects/  resources/  README.md';
+            },
+
+            date: () => {
+                return new Date().toString();
+            },
+
+            echo: (args) => {
+                if (!args) return 'Usage: echo "text"';
+                return args;
+            },
+
+            clear: () => {
+                output.innerHTML = '';
+                return null;
+            },
+
+            matrix: () => {
+                return `
+        🟢 "The Matrix is everywhere. It is all around us."
+        🟢 "Unfortunately, no one can be told what the Matrix is.
+             You have to see it for yourself."
+        `;
+            },
+
+            hack: () => {
+                const lines = [
+                    '🟢 Initializing hack sequence...',
+                    '🟢 Bypassing firewall...',
+                    '🟢 Cracking encryption...',
+                    '🟢 Access granted. Welcome to the mainframe.',
+                    '🟢 Congratulations! You are now a l33t h4x0r.',
+                ];
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i < lines.length) {
+                        appendOutput(lines[i], 'output');
+                        i++;
+                        output.scrollTop = output.scrollHeight;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 500);
+                return null; // async
+            },
+
+            sudo: () => {
+                return '🔴 Permission denied. (You are not in the sudoers file.)';
+            },
+        };
+
+        // ── Helper to append output ──
+        function appendOutput(text, className = 'output') {
+            const line = document.createElement('div');
+            line.innerHTML = text; // allow HTML
+            line.className = className;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // ── Execute command ──
+        function executeCommand(cmd) {
+            // Strip leading/trailing spaces
+            cmd = cmd.trim();
+
+            if (!cmd) {
+                // Empty line – just show prompt
+                return;
+            }
+
+            // Split command and args
+            const parts = cmd.match(/(".*?"|[^\s]+)/g);
+            const name = parts ? parts[0] : '';
+            const args = parts ? parts.slice(1).join(' ') : '';
+
+            // Show the command in output
+            const promptLine = document.createElement('div');
+            promptLine.innerHTML = `<span class="prompt">root@mybitbyte:~$</span> <span class="command">${escapeHtml(cmd)}</span>`;
+            output.appendChild(promptLine);
+
+            // Handle built-in commands
+            let response;
+            if (commands[name]) {
+                response = commands[name](args);
+            } else {
+                response = `Command not found: ${name}. Type 'help' for available commands.`;
+                appendOutput(response, 'error');
+                output.scrollTop = output.scrollHeight;
+                return;
+            }
+
+            // If response is null (e.g., clear, async hack), skip
+            if (response !== null) {
+                appendOutput(response, 'output');
+            }
+
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // ── Escape HTML to prevent XSS ──
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ── Event listeners ──
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value;
+                if (cmd.trim()) {
+                    history.push(cmd);
+                    historyIndex = history.length;
+                }
+                executeCommand(cmd);
+                input.value = '';
+                // Re-focus
+                input.focus();
+                e.preventDefault();
+            }
+
+            // Up arrow → history backward
+            if (e.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = history[historyIndex];
+                }
+                e.preventDefault();
+            }
+
+            // Down arrow → history forward
+            if (e.key === 'ArrowDown') {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    input.value = history[historyIndex];
+                } else {
+                    historyIndex = history.length;
+                    input.value = '';
+                }
+                e.preventDefault();
+            }
+        });
+
+        // Keep focus on the page
+        document.addEventListener('click', () => {
+            input.focus();
+        });
+
+        // Initial focus
+        window.addEventListener('load', () => {
+            input.focus();
+            // Ensure cursor is at the end of the prompt (it's an input)
+        });
+    </script>
 
 </body>
 </html>

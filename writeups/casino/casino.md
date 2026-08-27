@@ -2,6 +2,10 @@
 
 <img width="800" height="456" alt="26cbdbe6-282f-4d40-baa2-92d3c378c4c1" src="https://github.com/user-attachments/assets/7c0f12e3-f53a-429f-8703-dffd1405ae4a" />
 
+## **Lab Link**
+
+[Casino Link](https://www.hacksmarter.org/courses/32a677fd-323b-4236-ae70-3cda82d9c0b4/take)
+
 ## **Box Information**
 
 - **Name**: Casino

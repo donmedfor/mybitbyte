@@ -144,6 +144,7 @@ Last Name: Gonzalez
 <img width="800" height="456" alt="image (2)" src="https://github.com/user-attachments/assets/bc9466cc-5ce3-4957-8bac-4e4cef5782e2" />
 
 
+
 ---
 
 ## **Server-Side Template Injection (SSTI)**
@@ -191,6 +192,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 **Result:** Successfully extracted `george` user's private SSH key!
 
 <img width="800" height="456" alt="image (5)" src="https://github.com/user-attachments/assets/b2804dbf-b354-44d4-9b6c-7db2f2c0ea80" />
+
 
 
 ---

@@ -1,4 +1,7 @@
-# Casino Box Write-ups - HackSmarter
+# Casino
+
+<img width="1600" height="912" alt="26cbdbe6-282f-4d40-baa2-92d3c378c4c1" src="https://github.com/user-attachments/assets/7c0f12e3-f53a-429f-8703-dffd1405ae4a" />
+
 ## **Box Information**
 
 - **Name**: Casino

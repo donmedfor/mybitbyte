@@ -3,12 +3,7 @@
 // ============================================================
 
 const pageFiles = {
-    'casino': 'writeups/casino.md',
-    'advent-of-cyber-24': 'writeups/advent-of-cyber-24.md',
-    'side-quest-4': 'writeups/side-quest-4.md',
-    'crypto-failures': 'writeups/crypto-failures.md',
-    'darkhaven-ext': 'writeups/darkhaven-ext.md',
-    'darkhaven-dc02': 'writeups/darkhaven-dc02.md'
+    'casino': 'writeups/casino/casino.md',
 };
 
 // ── Hardcoded pages (Home, Tools, About) ──

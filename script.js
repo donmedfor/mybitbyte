@@ -17,15 +17,15 @@ const hardcodedPages = {
     <p style="color: var(--text-primary); font-family: var(--font-mono);">
     <i class="fas fa-terminal"></i> root@mybitbyte:~$ whoami
     </p>
-    <p>Cybersecurity Engineer | Penetration Tester | OSCP (in progress)</p>
+    <p>Cybersecurity Engineer | Penetration Tester | CEH, FCP, OSCP (in progress)</p>
 
-    <h2>📖 Latest Writeups</h2>
+    <h2>Latest Writeups</h2>
     <ul>
         <li><a href="#" data-page="casino">HackSmarter – Casino</a></li>
         <li><a href="#" data-page="second">HackSmarter – Second (AWS LAB)</a></li>
     </ul>
 
-    <h2>🔧 Tools I Use</h2>
+    <h2>Tools I Use</h2>
     <ul>
         <li>Nmap, masscan</li>
         <li>Burp Suite, OWASP ZAP</li>
@@ -40,7 +40,7 @@ const hardcodedPages = {
     `,
 
     tools: `
-    <h1>🛠️ Security Tools</h1>
+    <h1>Security Tools</h1>
     <ul>
         <li><strong>Nmap</strong> – Network scanning</li>
         <li><strong>Burp Suite</strong> – Web proxy & testing</li>
@@ -55,7 +55,7 @@ const hardcodedPages = {
     `,
 
     about: `
-    <h1>📄 About</h1>
+    <h1>About</h1>
     <p>Hi, I'm a cybersecurity engineer with a passion for penetration testing and red teaming. I hold a master's degree in computer science and am currently pursuing the OSCP certification.</p>
     <p>This site is a collection of my writeups from various CTF platforms. My goal is to share knowledge and help others learn.</p>
     <p>Connect with me:</p>
@@ -95,7 +95,7 @@ async function renderPage(pageId) {
             htmlContent = marked.parse(markdown);
         } catch (error) {
             htmlContent = `
-                <h1>⚠️ Writeup Not Found</h1>
+                <h1>Writeup Not Found</h1>
                 <p>Could not load <code>${pageFiles[pageId]}</code>.</p>
                 <p>Make sure the file exists in the <code>writeups/</code> folder.</p>
                 <p><a href="#" data-page="home">← Back to Home</a></p>

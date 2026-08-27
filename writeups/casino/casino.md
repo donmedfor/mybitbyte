@@ -65,7 +65,7 @@ The homepage reveals a JavaScript file:
 <script src="/static/js/app.min.js"></script>
 ```
 
-<img width="800" height="456" alt="image (1)" src="https://github.com/user-attachments/assets/ad4834c3-3f3a-4c38-b9d6-22ecf06b17cc" />
+<img width="800" height="256" alt="image (1)" src="https://github.com/user-attachments/assets/ad4834c3-3f3a-4c38-b9d6-22ecf06b17cc" />
 
 **app.min.js:**
 

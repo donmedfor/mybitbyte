@@ -22,8 +22,7 @@ const hardcodedPages = {
     <h2>📖 Latest Writeups</h2>
     <ul>
         <li><a href="#" data-page="casino">HackSmarter – Casino</a></li>
-        <li><a href="#" data-page="advent-of-cyber-24">TryHackMe – Advent of Cyber 24</a></li>
-        <li><a href="#" data-page="darkhaven-ext">HackSmarter – Darkhaven DC-EXT</a></li>
+        <li><a href="#" data-page="second">HackSmarter – Second (AWS LAB)</a></li>
     </ul>
 
     <h2>🔧 Tools I Use</h2>

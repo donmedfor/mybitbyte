@@ -145,7 +145,7 @@ Last Name: Gonzalez
 
 
 
----
+
 
 ## **Server-Side Template Injection (SSTI)**
 
@@ -195,7 +195,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 
 
----
+
 
 ## **SSH Access**
 

@@ -255,7 +255,7 @@ david@0e799dcd0c3a:~$ id
 uid=1001(david) gid=1001(david) groups=1001(david),4(adm)
 ```
 
-<img width="800" height="456" alt="image (6)" src="https://github.com/user-attachments/assets/4e061de5-3200-4d4a-b45e-4fa21b2a9cad" />
+<img width="800" height="356" alt="image (6)" src="https://github.com/user-attachments/assets/4e061de5-3200-4d4a-b45e-4fa21b2a9cad" />
 
 
 The `adm` group allows reading system logs. Checking `/var/log/provisioning.log` reveals the root password:
@@ -267,7 +267,7 @@ root password changed to: '~~root_password~~'
 ...
 ```
 
-<img width="800" height="456" alt="image (7)" src="https://github.com/user-attachments/assets/041ed8fc-32da-41d0-87c9-f90722ce059a" />
+<img width="800" height="356" alt="image (7)" src="https://github.com/user-attachments/assets/041ed8fc-32da-41d0-87c9-f90722ce059a" />
 
 
 ### **Getting Root Shell**

@@ -10,7 +10,7 @@ const pageFiles = {
 // ── Hardcoded pages (Home, Tools, About) ──
 const hardcodedPages = {
     home: `
-    <h1>🖥️ MyBitByte – Writeups</h1>
+    <h1>MyBitByte – Writeups</h1>
 
     <p>Welcome to my cybersecurity writeup hub. Here you'll find detailed walkthroughs for machines from TryHackMe, HackSmarter Labs, and other CTF platforms.</p>
 

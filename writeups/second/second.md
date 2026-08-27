@@ -15,6 +15,10 @@ Please note that the AWS labs are relatively new. While deployments are generall
 
 ## Lab access
 
+### **Lab Link**
+
+[Second Link](https://www.hacksmarter.org/courses/32a677fd-323b-4236-ae70-3cda82d9c0b4)
+
 To interact with AWS services, you must have at least an IAM account. For this lab, the required AWS access keys are provided, allowing us to authenticate and access the lab environment without creating our own AWS account.
 
 ```jsx

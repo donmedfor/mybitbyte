@@ -4,6 +4,7 @@
 
 const pageFiles = {
     'casino': 'writeups/casino/casino.md',
+    'second': 'writeups/second/second.md',
 };
 
 // ── Hardcoded pages (Home, Tools, About) ──

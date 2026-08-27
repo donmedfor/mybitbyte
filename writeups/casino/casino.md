@@ -4,7 +4,7 @@
 
 ## **Lab Link**
 
-[Casino Link](https://www.hacksmarter.org/courses/32a677fd-323b-4236-ae70-3cda82d9c0b4/take)
+[Casino Link](https://www.hacksmarter.org/courses/32a677fd-323b-4236-ae70-3cda82d9c0b4)
 
 ## **Box Information**
 

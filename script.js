@@ -3,42 +3,13 @@
 // ============================================================
 
 const pageFiles = {
+    'home': 'writeups/home/home.md',
     'casino': 'writeups/casino/casino.md',
     'second': 'writeups/second/second.md',
 };
 
-// ── Hardcoded pages (Home, Tools, About) ──
+// ── Hardcoded pages (Tools, About) ──
 const hardcodedPages = {
-    home: `
-    <h1>MyBitByte – Writeups</h1>
-
-    <p>Welcome to my cybersecurity writeup hub. Here you'll find detailed walkthroughs for machines from TryHackMe, HackSmarter Labs, and other CTF platforms.</p>
-
-    <p style="color: var(--text-primary); font-family: var(--font-mono);">
-    <i class="fas fa-terminal"></i> root@mybitbyte:~$ whoami
-    </p>
-    <p>Cybersecurity Engineer | Penetration Tester | CEH, FCP, OSCP (in progress)</p>
-
-    <h2>Latest Writeups</h2>
-    <ul>
-        <li><a href="#" data-page="casino">HackSmarter – Casino</a></li>
-        <li><a href="#" data-page="second">HackSmarter – Second (AWS LAB)</a></li>
-    </ul>
-
-    <h2>Tools I Use</h2>
-    <ul>
-        <li>Nmap, masscan</li>
-        <li>Burp Suite, OWASP ZAP</li>
-        <li>Metasploit, msfvenom</li>
-        <li>Gobuster, ffuf</li>
-        <li>John the Ripper, hashcat</li>
-        <li>Impacket, BloodHound</li>
-    </ul>
-
-    <p><i class="fas fa-tags"></i> Tags: <span class="tag">#pentest</span> <span class="tag">#redteam</span> <span class="tag">#ctf</span></p>
-    <p>Check out the sidebar for more.</p>
-    `,
-
     tools: `
     <h1>Security Tools</h1>
     <ul>

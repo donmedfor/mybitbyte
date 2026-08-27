@@ -1,6 +1,6 @@
 # Casino
 
-<img width="1600" height="912" alt="26cbdbe6-282f-4d40-baa2-92d3c378c4c1" src="https://github.com/user-attachments/assets/7c0f12e3-f53a-429f-8703-dffd1405ae4a" />
+<img width="800" height="456" alt="26cbdbe6-282f-4d40-baa2-92d3c378c4c1" src="https://github.com/user-attachments/assets/7c0f12e3-f53a-429f-8703-dffd1405ae4a" />
 
 ## **Box Information**
 
@@ -54,7 +54,7 @@ HTTP/1.1 302 Found
 Location: /login
 ```
 
-<img width="1416" height="890" alt="image" src="https://github.com/user-attachments/assets/2e978a75-a3be-480b-abf8-399905348803" />
+<img width="800" height="456" alt="image" src="https://github.com/user-attachments/assets/2e978a75-a3be-480b-abf8-399905348803" />
 
 
 ### **Source Code Analysis**
@@ -65,7 +65,7 @@ The homepage reveals a JavaScript file:
 <script src="/static/js/app.min.js"></script>
 ```
 
-<img width="1037" height="208" alt="image (1)" src="https://github.com/user-attachments/assets/ad4834c3-3f3a-4c38-b9d6-22ecf06b17cc" />
+<img width="800" height="456" alt="image (1)" src="https://github.com/user-attachments/assets/ad4834c3-3f3a-4c38-b9d6-22ecf06b17cc" />
 
 **app.min.js:**
 
@@ -141,7 +141,7 @@ Last Name: Gonzalez
 
 **Result:** Successful authentication!
 
-<img width="1379" height="689" alt="image (2)" src="https://github.com/user-attachments/assets/bc9466cc-5ce3-4957-8bac-4e4cef5782e2" />
+<img width="800" height="456" alt="image (2)" src="https://github.com/user-attachments/assets/bc9466cc-5ce3-4957-8bac-4e4cef5782e2" />
 
 
 ---
@@ -160,7 +160,7 @@ After logging in, the profile page allows editing user information. Testing for 
 
 **Result:** The page displays `49` - SSTI confirmed!
 
-<img width="1348" height="703" alt="image (3)" src="https://github.com/user-attachments/assets/dd0b9f91-3a03-4604-b35b-c8c631f7c760" />
+<img width="800" height="456" alt="image (3)" src="https://github.com/user-attachments/assets/dd0b9f91-3a03-4604-b35b-c8c631f7c760" />
 
 
 ### **Remote Code Execution**
@@ -177,7 +177,7 @@ After logging in, the profile page allows editing user information. Testing for 
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
-<img width="1345" height="670" alt="image (4)" src="https://github.com/user-attachments/assets/ea80e5b2-52c9-4683-82b1-38d6123d9759" />
+<img width="800" height="456" alt="image (4)" src="https://github.com/user-attachments/assets/ea80e5b2-52c9-4683-82b1-38d6123d9759" />
 
 
 ### **Reading Sensitive Files**
@@ -190,7 +190,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 **Result:** Successfully extracted `george` user's private SSH key!
 
-<img width="1259" height="678" alt="image (5)" src="https://github.com/user-attachments/assets/b2804dbf-b354-44d4-9b6c-7db2f2c0ea80" />
+<img width="800" height="456" alt="image (5)" src="https://github.com/user-attachments/assets/b2804dbf-b354-44d4-9b6c-7db2f2c0ea80" />
 
 
 ---
@@ -249,7 +249,7 @@ david@0e799dcd0c3a:~$ id
 uid=1001(david) gid=1001(david) groups=1001(david),4(adm)
 ```
 
-<img width="756" height="290" alt="image (6)" src="https://github.com/user-attachments/assets/4e061de5-3200-4d4a-b45e-4fa21b2a9cad" />
+<img width="800" height="456" alt="image (6)" src="https://github.com/user-attachments/assets/4e061de5-3200-4d4a-b45e-4fa21b2a9cad" />
 
 
 The `adm` group allows reading system logs. Checking `/var/log/provisioning.log` reveals the root password:
@@ -261,7 +261,7 @@ root password changed to: '~~root_password~~'
 ...
 ```
 
-<img width="1292" height="260" alt="image (7)" src="https://github.com/user-attachments/assets/041ed8fc-32da-41d0-87c9-f90722ce059a" />
+<img width="800" height="456" alt="image (7)" src="https://github.com/user-attachments/assets/041ed8fc-32da-41d0-87c9-f90722ce059a" />
 
 
 ### **Getting Root Shell**

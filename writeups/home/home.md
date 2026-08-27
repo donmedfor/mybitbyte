@@ -4,7 +4,7 @@
 
 ---
 
-## 👋 Welcome
+## Welcome
 
 Hi, I'm a cybersecurity engineer passionate about offensive security. This hub documents my journey through various CTF platforms—from enumeration to exploitation. Each writeup is a detailed walkthrough, including tools, techniques, and lessons learned.
 
@@ -16,7 +16,7 @@ Hi, I'm a cybersecurity engineer passionate about offensive security. This hub d
 
 ---
 
-## 🔥 Featured Writeup
+## Featured Writeup
 
 <div class="featured-card">
   <h3>HackSmarter – Casino</h3>
@@ -26,7 +26,7 @@ Hi, I'm a cybersecurity engineer passionate about offensive security. This hub d
 
 ---
 
-## 📚 All Writeups
+## All Writeups
 
 | Machine | Platform | Date |
 |---------|----------|------|
@@ -37,7 +37,7 @@ Hi, I'm a cybersecurity engineer passionate about offensive security. This hub d
 
 ---
 
-## 🛠️ Tools I Use Daily
+## Tools I Use Daily
 
 <div class="tool-grid">
   <span>Nmap</span> <span>masscan</span>
@@ -50,7 +50,7 @@ Hi, I'm a cybersecurity engineer passionate about offensive security. This hub d
 
 ---
 
-## 👤 About Me
+## About Me
 
 Cybersecurity Engineer with a Master's in Computer Science. I focus on internal network penetration testing, web application security, and cloud (AWS) assessments. I hold CEH and FCP certifications and am currently working toward OSCP.
 
@@ -59,7 +59,7 @@ Cybersecurity Engineer with a Master's in Computer Science. I focus on internal 
 
 ---
 
-## 📬 Connect
+## Connect
 
 Have questions or want to collaborate? Reach out via the social links above or open an issue on GitHub.
 

@@ -1,4 +1,4 @@
-#Casino Box Write-ups - HackSmarter
+# Casino Box Write-ups - HackSmarter
 ## **Box Information**
 
 - **Name**: Casino

@@ -158,5 +158,3 @@ document.addEventListener('click', (e) => {
         }
     }
 });
-
-console.log('🟢 MyBitByte – Writeups loaded.');

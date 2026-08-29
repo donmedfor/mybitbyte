@@ -6,6 +6,7 @@ const pageFiles = {
     'home': 'writeups/home/home.md',
     'casino': 'writeups/casino/casino.md',
     'second': 'writeups/second/second.md',
+    'mapper': 'writeups/mapper/mapper.md',
 };
 
 // ── Hardcoded pages (Tools, About) ──

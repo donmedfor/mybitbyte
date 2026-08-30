@@ -1,4 +1,7 @@
 #  Mapper (AWS HSM LAB)
+
+<img width="700" height="356" alt="b38e7594-09c7-470f-9269-11733449406d" src="https://github.com/user-attachments/assets/934dfd58-4545-43af-b9a3-9c61ecb76dd2" />
+
 ##  **Objective**
 
 Perform an AWS penetration test against a client's account, auditing all IAM Users and identifying privilege escalation paths. The goal is to retrieve a flag stored in AWS Secrets Manager that is only accessible to administrators.

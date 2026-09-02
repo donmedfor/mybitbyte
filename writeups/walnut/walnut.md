@@ -173,8 +173,7 @@ Q8NPUgCvuBQ636tzFBh3
 vyZzRcreRGDjbq9t19Tb
 
 ```
-Password Reuse
-These correspond to the localjob1 through localjob4 accounts.
+These passwords correspond to the localjob1 through localjob4 accounts.
 ```
 automation@walnut:~$ su localjob1
 Password: asdh023incasdahff9

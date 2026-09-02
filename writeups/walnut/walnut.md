@@ -143,7 +143,7 @@ uid=7789(automation) gid=7789(automation) groups=7789(automation)
 ### User Flag
 ```
 automation@walnut:~$ cat user.txt
-c3dcdda3950b1eca68477ce65da82392
+{FLAGGGGGG}
 ```
 ## Privilege Escalation
 ### User Enumeration
@@ -230,7 +230,7 @@ uid=5002(localjob3) gid=5002(localjob3) euid=0(root) egid=0(root) groups=0(root)
 ```
 rootme-5.3# cd /root
 rootme-5.3# cat root.txt
-f42a447b64f431b99d7fe59f65f71bc7
+{FLAGGGGGG}
 ```
 ---
 ## Attack Chain Summary

@@ -156,7 +156,7 @@ drwxr-x--- 2 localjob3  localjob3  4096 Sep 19  2025 localjob3
 drwxr-x--- 2 localjob4  localjob4  4096 Feb 17  2026 localjob4
 
 ```
-the hidden directory .hidden/ in automation's home was found to contain several cleartext passwords. These correspond to the localjob1 through localjob4 accounts.
+the hidden directory .hidden/ in automation's home was found to contain several cleartext passwords. 
 ```
 
 automation@walnut:~$ cat .hidden/
@@ -174,8 +174,7 @@ vyZzRcreRGDjbq9t19Tb
 
 ```
 Password Reuse
-The LDAP‑discovered password was reused across multiple accounts:
-
+These correspond to the localjob1 through localjob4 accounts.
 ```
 automation@walnut:~$ su localjob1
 Password: asdh023incasdahff9

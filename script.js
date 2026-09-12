@@ -8,6 +8,8 @@ const pageFiles = {
     'second': 'writeups/second/second.md',
     'mapper': 'writeups/mapper/mapper.md',
     'walnut': 'writeups/walnut/walnut.md',
+    'aftermatch': 'writeups/aftermatch/aftermatch.md',
+   
 };
 
 // ── Hardcoded pages (Tools, About) ──

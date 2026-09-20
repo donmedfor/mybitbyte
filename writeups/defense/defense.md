@@ -125,7 +125,8 @@ nxc smb DC.hsm-defense.local -u 'guest' -p '' --generate-krb5-file /etc/krb5.con
 Add to `/etc/hosts`:
 
 ```
-10.1.87.19 DC.hsm-defense.local hsm-defense.local DC
+10.1.212.125 DC.hsm-defense.local hsm-defense.local DC
+
 ```
 
 ### Web Enumeration

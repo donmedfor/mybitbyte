@@ -1129,7 +1129,7 @@ Authenticate:
 └──╼ $ nxc smb -k DC.hsm-defense.local -u oscar.mazerath -p 'Password123!' --shares
 SMB         DC.hsm-defense.local 445    DC               [*]  x64 (name:DC) (domain:hsm-defense.local) (signing:True) (SMBv1:None) (NTLM:False)
 SMB         DC.hsm-defense.local 445    DC               [+] hsm-defense.local\oscar.mazerath:Password123!```
-
+```
 ---
 
 ## 11. Targeted Kerberoasting on ryan.cole

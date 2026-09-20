@@ -9,6 +9,7 @@ const pageFiles = {
     'mapper': 'writeups/mapper/mapper.md',
     'walnut': 'writeups/walnut/walnut.md',
     'aftermatch': 'writeups/aftermatch/aftermatch.md',
+    'defense': 'writeups/defense/defense.md',
    
 };
 

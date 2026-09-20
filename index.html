@@ -4,191 +4,96 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="MyBitByte — Cybersecurity writeups, CTF solutions, and lab walkthroughs." />
-    <meta name="theme-color" content="#0a0a0b" />
+    <meta name="author" content="donmed" />
+    <meta name="theme-color" content="#0d1117" />
+
     <title>MyBitByte — Writeups</title>
 
-    <!-- Preconnect -->
+    <!-- Preconnect for faster CDN loads -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Inter + JetBrains Mono -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    />
-
-    <!-- Tailwind Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        app: {
-                            bg:       'var(--bg)',
-                            subtle:   'var(--bg-subtle)',
-                            elevated: 'var(--bg-elevated)',
-                            overlay:  'var(--bg-overlay)',
-                            code:     'var(--bg-code)',
-                            border:   'var(--border)',
-                            strong:   'var(--border-strong)',
-                            text:     'var(--text)',
-                            sec:      'var(--text-secondary)',
-                            muted:    'var(--text-muted)',
-                            accent:   'var(--accent)',
-                            'accent-hover': 'var(--accent-hover)',
-                            'accent-subtle':'var(--accent-subtle)',
-                            'accent-border':'var(--accent-border)',
-                        },
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-                    },
-                    maxWidth: {
-                        content: '820px',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1)',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%':   { opacity: '0', transform: 'translateY(6px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                    },
-                },
-            },
-        };
-    </script>
-
-    <!-- Font Awesome -->
+    <!-- Font Awesome 6.5 -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
 
-    <!-- Marked (Markdown) -->
+    <!-- Markdown parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 
-    <!-- Custom CSS: theme vars + markdown content -->
+    <!-- External CSS -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Inline SVG favicon -->
+    <!-- Favicon (inline SVG, no extra request) -->
     <link
         rel="icon"
-        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a0a0b'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle' fill='%234ade80' font-family='monospace'%3E%26gt;_%3C/text%3E%3C/svg%3E"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230d1117'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle' fill='%234ade80' font-family='monospace'%3E%26gt;_%3C/text%3E%3C/svg%3E"
     />
 </head>
-<body class="min-h-screen bg-app-bg text-app-text font-sans antialiased transition-colors duration-200">
+<body>
 
     <!-- Mobile Menu Toggle -->
-    <button
-        id="menuToggle"
-        aria-label="Open navigation menu"
-        class="md:hidden fixed top-4 left-4 z-[90] w-10 h-10 inline-flex items-center justify-center
-               rounded-md bg-app-elevated border border-app-border text-app-sec
-               shadow-lg hover:text-app-accent hover:border-app-accent-border hover:bg-app-accent-subtle
-               transition-colors"
-    >
-        <i class="fas fa-bars text-sm"></i>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu">
+        <i class="fas fa-bars"></i>
     </button>
 
     <!-- Theme Toggle -->
-    <button
-        id="themeToggle"
-        aria-label="Toggle theme"
-        class="fixed bottom-6 right-6 z-[90] w-11 h-11 inline-flex items-center justify-center
-               rounded-full bg-app-elevated border border-app-border text-app-sec
-               shadow-lg hover:text-app-accent hover:border-app-accent-border hover:bg-app-accent-subtle
-               hover:scale-105 active:scale-95 transition-all"
-    >
-        <i class="fas fa-moon text-sm"></i>
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
     </button>
 
-    <div class="flex min-h-screen">
+    <div class="app">
         <!-- Sidebar -->
-        <aside
-            id="sidebar"
-            class="sidebar fixed md:sticky top-0 left-0 z-50 h-screen w-[280px] shrink-0
-                   flex flex-col bg-app-subtle border-r border-app-border
-                   -translate-x-full md:translate-x-0
-                   transition-transform duration-200"
-        >
-            <!-- Brand -->
-            <div class="px-5 pt-6 pb-5 border-b border-app-border">
-                <h1 class="flex items-center gap-3 font-mono text-[0.95rem] font-semibold tracking-tight text-app-text">
-                    <span class="inline-flex items-center justify-center w-7 h-7 rounded-md
-                                 bg-app-accent-subtle border border-app-accent-border
-                                 text-app-accent text-[0.7rem]">
-                        <i class="fas fa-terminal"></i>
-                    </span>
-                    MyBitByte
-                </h1>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-terminal"></i> MyBitByte</h1>
             </div>
 
-            <!-- Search -->
-            <div class="px-4 py-3 border-b border-app-border">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-2.5 top-1/2 -translate-y-1/2
-                              text-app-muted text-xs pointer-events-none"></i>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search docs... (press /)"
-                        aria-label="Search writeups"
-                        class="w-full pl-8 pr-3 py-2 rounded-md bg-app-elevated border border-app-border
-                               text-app-text text-[0.83rem] placeholder:text-app-muted
-                               outline-none transition-all
-                               hover:border-app-strong focus:border-app-accent
-                               focus:ring-[3px] focus:ring-app-accent-subtle"
-                    />
-                </div>
+            <div class="sidebar-search">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search docs... (press /)"
+                    aria-label="Search writeups"
+                />
             </div>
 
-            <!-- Nav -->
-            <nav id="nav" class="flex-1 overflow-y-auto px-3 py-3">
-                <ul class="flex flex-col gap-[1px]">
+            <nav class="nav" id="nav">
+                <ul>
                     <li class="section-title">Writeups</li>
-                    <li><a href="#" data-page="home" class="nav-link active">Home</a></li>
+                    <li><a href="#" data-page="home" class="active">Home</a></li>
 
                     <li class="section-title">TryHackMe</li>
-                    <li><a href="#" data-page="" class="nav-link opacity-50 pointer-events-none">Soon...</a></li>
+                    <li><a href="#" data-page="">Soon...</a></li>
 
                     <li class="section-title">HackTheBox</li>
-                    <li><a href="#" data-page="" class="nav-link opacity-50 pointer-events-none">Soon...</a></li>
+                    <li><a href="#" data-page="">Soon...</a></li>
 
                     <li class="section-title">Hack Smarter</li>
-                    <li><a href="writeups/casino/casino.md" data-page="casino" class="nav-link">Casino</a></li>
-                    <li><a href="writeups/second/second.md" data-page="second" class="nav-link">Second</a></li>
-                    <li><a href="writeups/mapper/mapper.md" data-page="mapper" class="nav-link">Mapper</a></li>
-                    <li><a href="writeups/walnut/walnut.md" data-page="walnut" class="nav-link">Walnut</a></li>
-                    <li><a href="writeups/aftermatch/aftermatch.md" data-page="aftermatch" class="nav-link">AfterMatch</a></li>
-                    <li><a href="writeups/defense/defense.md" data-page="defense" class="nav-link">HSM Defense</a></li>
+                    <li><a href="writeups/casino/casino.md" data-page="casino">Casino</a></li>
+                    <li><a href="writeups/second/second.md" data-page="second">Second</a></li>
+                    <li><a href="writeups/mapper/mapper.md" data-page="mapper">Mapper</a></li>
+                    <li><a href="writeups/walnut/walnut.md" data-page="walnut">Walnut</a></li>
+                    <li><a href="writeups/aftermatch/aftermatch.md" data-page="aftermatch">AfterMatch</a></li>
+                    <li><a href="writeups/defense/defense.md" data-page="defense">HSM Defense</a></li>
 
                     <li class="section-title">Resources</li>
-                    <li><a href="#" data-page="tools" class="nav-link">Tools</a></li>
-                    <li><a href="#" data-page="about" class="nav-link">About</a></li>
+                    <li><a href="#" data-page="tools">Tools</a></li>
+                    <li><a href="#" data-page="about">About</a></li>
                 </ul>
             </nav>
         </aside>
 
         <!-- Main Content -->
-        <main
-            id="mainContent"
-            class="main flex-1 min-w-0 w-full max-w-content mx-auto
-                   px-6 md:px-10 lg:px-12 py-10 md:py-16
-                   animate-fade-in"
-        ></main>
+        <main class="main" id="mainContent">
+            <!-- Content is injected here by JavaScript -->
+        </main>
 
         <!-- Mobile Backdrop -->
-        <div
-            id="sidebarBackdrop"
-            class="sidebar-backdrop fixed inset-0 z-40 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200"
-        ></div>
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     </div>
 
+    <!-- External JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>

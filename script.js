@@ -3,13 +3,13 @@
 // ============================================================
 
 const pageFiles = {
-    'home': 'writeups/home/home.md',
-    'casino': 'writeups/casino/casino.md',
-    'second': 'writeups/second/second.md',
-    'mapper': 'writeups/mapper/mapper.md',
-    'walnut': 'writeups/walnut/walnut.md',
+    'home':       'writeups/home/home.md',
+    'casino':     'writeups/casino/casino.md',
+    'second':     'writeups/second/second.md',
+    'mapper':     'writeups/mapper/mapper.md',
+    'walnut':     'writeups/walnut/walnut.md',
     'aftermatch': 'writeups/aftermatch/aftermatch.md',
-    'defense': 'writeups/defense/defense.md',
+    'defense':    'writeups/defense/defense.md',
 };
 
 // ── Hardcoded pages (Tools, About) ──
@@ -144,7 +144,6 @@ function closeSidebar() {
 
 function enhanceCodeBlocks() {
     main.querySelectorAll('pre').forEach(pre => {
-        // Skip if already enhanced
         if (pre.querySelector('.copy-btn')) return;
 
         const btn = document.createElement('button');
@@ -164,7 +163,6 @@ function enhanceCodeBlocks() {
                     btn.classList.remove('copied');
                 }, 1500);
             } catch {
-                // Fallback for older browsers / non-secure contexts
                 const ta = document.createElement('textarea');
                 ta.value = code;
                 document.body.appendChild(ta);
@@ -210,7 +208,6 @@ if (searchInput) {
             parent.style.display = (text.includes(query) || query === '') ? '' : 'none';
         });
 
-        // Also filter the section titles — hide if all children hidden
         document.querySelectorAll('.nav .section-title').forEach(title => {
             let next = title.nextElementSibling;
             let anyVisible = false;
@@ -251,7 +248,6 @@ if (backdrop) {
     backdrop.addEventListener('click', closeSidebar);
 }
 
-// Close sidebar on outside click (mobile)
 document.addEventListener('click', (e) => {
     if (window.innerWidth > 768) return;
     if (!sidebar.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
@@ -259,7 +255,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Close on Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeSidebar();
 });
@@ -268,7 +263,6 @@ document.addEventListener('keydown', (e) => {
 // THEME TOGGLE
 // ============================================================
 
-// Restore saved theme on load
 (function initTheme() {
     const saved = localStorage.getItem('theme');
     if (saved === 'light') {
@@ -309,14 +303,12 @@ function loadFromHash() {
 
 window.addEventListener('hashchange', loadFromHash);
 
-// Initial load
 loadFromHash();
 
 // ============================================================
 // KEYBOARD SHORTCUTS
 // ============================================================
 
-// "/" focuses search
 document.addEventListener('keydown', (e) => {
     if (e.key === '/' && document.activeElement !== searchInput) {
         e.preventDefault();

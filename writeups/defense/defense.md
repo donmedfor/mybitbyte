@@ -1,5 +1,8 @@
 # HSM Defense — Hack Smarter Labs Writeup
 
+<img width="1600" height="912" alt="d177b89b-f2d5-4285-9b0f-b1ef248f0b67" src="https://github.com/user-attachments/assets/94e10125-9fe6-446f-9b8a-669d4e3c4de1" />
+
+
 ## Scenario
 
 HSM Defense is a defense contractor requiring an in-depth penetration test against their internal Domain Controller. The objective is to demonstrate impact by elevating privileges to Domain Admin.

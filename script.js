@@ -1,5 +1,9 @@
 // ============================================================
-// CONFIG: Map page IDs to Markdown files
+// MyBitByte — script.js
+// ============================================================
+
+// ============================================================
+// CONFIG: Map page IDs → Markdown file paths
 // ============================================================
 
 const pageFiles = {
@@ -12,54 +16,61 @@ const pageFiles = {
     'defense':    'writeups/defense/defense.md',
 };
 
-// ── Hardcoded pages (Tools, About) ──
+// ============================================================
+// HARDCODED PAGES (Tools, About)
+// ============================================================
+
 const hardcodedPages = {
     tools: `
-    <h1>Security Tools</h1>
-    <p>The toolkit I reach for most often during engagements and CTFs.</p>
-    <div class="tool-grid">
-        <span>Nmap</span>
-        <span>Burp Suite</span>
-        <span>Metasploit</span>
-        <span>Gobuster</span>
-        <span>ffuf</span>
-        <span>John the Ripper</span>
-        <span>Hashcat</span>
-        <span>Wireshark</span>
-        <span>BloodHound</span>
-        <span>Impacket</span>
-        <span>NetExec</span>
-        <span>Responder</span>
-        <span>evil-winrm</span>
-        <span>BloodyAD</span>
-    </div>
-    <p><a href="#" data-page="home">← Back to Home</a></p>
+        <h1>Security Tools</h1>
+        <p>The toolkit I reach for most often during engagements and CTFs.</p>
+        <div class="tool-grid">
+            <span>Nmap</span>
+            <span>Burp Suite</span>
+            <span>Metasploit</span>
+            <span>Gobuster</span>
+            <span>ffuf</span>
+            <span>John the Ripper</span>
+            <span>Hashcat</span>
+            <span>Wireshark</span>
+            <span>BloodHound</span>
+            <span>Impacket</span>
+            <span>NetExec</span>
+            <span>Responder</span>
+            <span>evil-winrm</span>
+            <span>BloodyAD</span>
+            <span>Certipy</span>
+            <span>Rubeus</span>
+        </div>
+        <p><a href="#" data-page="home">← Back to Home</a></p>
     `,
 
     about: `
-    <h1>About</h1>
-    <p>Hi, I'm a cybersecurity engineer with a passion for penetration testing and red teaming. I hold a master's degree in computer science and am currently pursuing the OSCP certification.</p>
-    <p>This site is a collection of my writeups from various CTF platforms. My goal is to share knowledge and help others learn.</p>
-    <h2>Connect</h2>
-    <ul>
-        <li><a href="https://github.com/donmedfor" target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href="https://twitter.com/yourhandle" target="_blank" rel="noopener">Twitter</a></li>
-    </ul>
-    <p><a href="#" data-page="home">← Back to Home</a></p>
-    `
+        <h1>About</h1>
+        <p>Hi, I'm a cybersecurity engineer with a passion for penetration testing and red teaming. I hold a master's degree in computer science and am currently pursuing the OSCP certification.</p>
+        <p>This site is a collection of my writeups from various CTF platforms. My goal is to share knowledge and help others learn.</p>
+
+        <h2>Connect</h2>
+        <ul>
+            <li><a href="https://github.com/donmedfor" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://twitter.com/yourhandle" target="_blank" rel="noopener">Twitter</a></li>
+        </ul>
+
+        <p><a href="#" data-page="home">← Back to Home</a></p>
+    `,
 };
 
 // ============================================================
 // DOM REFS
 // ============================================================
 
-const main = document.getElementById('mainContent');
-const navLinks = document.querySelectorAll('.nav a[data-page]');
-const searchInput = document.getElementById('searchInput');
-const sidebar = document.getElementById('sidebar');
-const menuToggle = document.getElementById('menuToggle');
-const backdrop = document.getElementById('sidebarBackdrop');
-const themeToggle = document.getElementById('themeToggle');
+const main          = document.getElementById('mainContent');
+const sidebar       = document.getElementById('sidebar');
+const menuToggle    = document.getElementById('menuToggle');
+const backdrop      = document.getElementById('sidebarBackdrop');
+const themeToggle   = document.getElementById('themeToggle');
+const searchInput   = document.getElementById('searchInput');
+const navLinks      = document.querySelectorAll('.nav a[data-page]');
 
 // ============================================================
 // RENDER ENGINE
@@ -99,9 +110,14 @@ async function renderPage(pageId) {
 
     main.innerHTML = htmlContent;
 
-    // Scroll to top on navigation
+    // Reset scroll
     main.scrollTo({ top: 0, behavior: 'instant' });
     window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Re-trigger page fade-in animation
+    main.classList.remove('animate-fade-in');
+    void main.offsetWidth; // force reflow
+    main.classList.add('animate-fade-in');
 
     // Highlight active nav link
     navLinks.forEach(link => link.classList.remove('active'));
@@ -124,11 +140,10 @@ async function renderPage(pageId) {
         });
     });
 
-    // Add copy buttons to code blocks
+    // Post-render enhancements
     enhanceCodeBlocks();
-
-    // Add IDs to headings for anchor links
     addHeadingAnchors();
+    wrapTables();
 }
 
 // ============================================================
@@ -142,6 +157,9 @@ function closeSidebar() {
     }
 }
 
+/**
+ * Adds a copy-to-clipboard button to every <pre> block.
+ */
 function enhanceCodeBlocks() {
     main.querySelectorAll('pre').forEach(pre => {
         if (pre.querySelector('.copy-btn')) return;
@@ -154,23 +172,29 @@ function enhanceCodeBlocks() {
 
         btn.addEventListener('click', async () => {
             const code = pre.querySelector('code')?.innerText ?? pre.innerText;
-            try {
-                await navigator.clipboard.writeText(code);
+            const done = () => {
                 btn.innerHTML = '<i class="fas fa-check"></i>';
                 btn.classList.add('copied');
                 setTimeout(() => {
                     btn.innerHTML = '<i class="fas fa-copy"></i>';
                     btn.classList.remove('copied');
                 }, 1500);
+            };
+
+            try {
+                await navigator.clipboard.writeText(code);
+                done();
             } catch {
+                // Fallback for insecure contexts
                 const ta = document.createElement('textarea');
                 ta.value = code;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
                 document.body.appendChild(ta);
                 ta.select();
                 try { document.execCommand('copy'); } catch {}
                 document.body.removeChild(ta);
-                btn.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+                done();
             }
         });
 
@@ -178,6 +202,9 @@ function enhanceCodeBlocks() {
     });
 }
 
+/**
+ * Adds slug IDs to h2/h3 for anchor linking.
+ */
 function addHeadingAnchors() {
     main.querySelectorAll('h2, h3').forEach(heading => {
         if (heading.id) return;
@@ -192,6 +219,19 @@ function addHeadingAnchors() {
     });
 }
 
+/**
+ * Wraps tables in a scroll container for narrow viewports.
+ */
+function wrapTables() {
+    main.querySelectorAll('table').forEach(table => {
+        if (table.parentElement.classList.contains('table-wrap')) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrap';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+    });
+}
+
 // ============================================================
 // SEARCH
 // ============================================================
@@ -201,6 +241,7 @@ if (searchInput) {
         const query = this.value.toLowerCase().trim();
         const links = document.querySelectorAll('.nav a[data-page]');
 
+        // Filter individual links
         links.forEach(link => {
             const text = link.textContent.toLowerCase();
             const parent = link.closest('li');
@@ -208,6 +249,7 @@ if (searchInput) {
             parent.style.display = (text.includes(query) || query === '') ? '' : 'none';
         });
 
+        // Hide section titles whose children are all hidden
         document.querySelectorAll('.nav .section-title').forEach(title => {
             let next = title.nextElementSibling;
             let anyVisible = false;
@@ -227,7 +269,9 @@ if (searchInput) {
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        renderPage(link.dataset.page);
+        const page = link.dataset.page;
+        if (!page) return;
+        renderPage(page);
         closeSidebar();
     });
 });
@@ -239,54 +283,67 @@ navLinks.forEach(link => {
 if (menuToggle) {
     menuToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        sidebar.classList.toggle('open');
-        if (backdrop) backdrop.classList.toggle('show', sidebar.classList.contains('open'));
+        const isOpen = sidebar.classList.toggle('open');
+        if (backdrop) backdrop.classList.toggle('show', isOpen);
+        menuToggle.innerHTML = isOpen
+            ? '<i class="fas fa-xmark text-sm"></i>'
+            : '<i class="fas fa-bars text-sm"></i>';
     });
 }
 
 if (backdrop) {
-    backdrop.addEventListener('click', closeSidebar);
+    backdrop.addEventListener('click', () => {
+        closeSidebar();
+        menuToggle.innerHTML = '<i class="fas fa-bars text-sm"></i>';
+    });
 }
 
+// Outside-click close (mobile)
 document.addEventListener('click', (e) => {
     if (window.innerWidth > 768) return;
     if (!sidebar.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
         closeSidebar();
+        menuToggle.innerHTML = '<i class="fas fa-bars text-sm"></i>';
     }
 });
 
+// Escape key closes sidebar
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeSidebar();
+    if (e.key === 'Escape') {
+        closeSidebar();
+        if (menuToggle) menuToggle.innerHTML = '<i class="fas fa-bars text-sm"></i>';
+    }
 });
 
 // ============================================================
 // THEME TOGGLE
 // ============================================================
 
-(function initTheme() {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'light') {
-        document.body.classList.add('light');
-        updateThemeIcon();
-    }
-})();
-
 function updateThemeIcon() {
     if (!themeToggle) return;
     const icon = themeToggle.querySelector('i');
     if (!icon) return;
-    icon.className = document.body.classList.contains('light')
-        ? 'fas fa-sun'
-        : 'fas fa-moon';
+    const isLight = document.body.classList.contains('light');
+    icon.className = isLight ? 'fas fa-sun text-sm' : 'fas fa-moon text-sm';
+    // Update meta theme-color for mobile chrome
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = isLight ? '#ffffff' : '#0a0a0b';
 }
+
+// Restore saved theme on load
+(function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') {
+        document.body.classList.add('light');
+    }
+    updateThemeIcon();
+})();
 
 if (themeToggle) {
     themeToggle.addEventListener('click', () => {
         document.body.classList.toggle('light');
-        localStorage.setItem(
-            'theme',
-            document.body.classList.contains('light') ? 'light' : 'dark'
-        );
+        const isLight = document.body.classList.contains('light');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
         updateThemeIcon();
     });
 }
@@ -303,6 +360,7 @@ function loadFromHash() {
 
 window.addEventListener('hashchange', loadFromHash);
 
+// Initial load
 loadFromHash();
 
 // ============================================================
@@ -310,8 +368,25 @@ loadFromHash();
 // ============================================================
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== searchInput) {
+    // "/" focuses search (unless typing in a field)
+    if (
+        e.key === '/' &&
+        document.activeElement !== searchInput &&
+        !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
+    ) {
         e.preventDefault();
         searchInput?.focus();
+    }
+});
+
+// ============================================================
+// INIT: handle resize — collapse mobile menu when going wide
+// ============================================================
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('show');
+        if (menuToggle) menuToggle.innerHTML = '<i class="fas fa-bars text-sm"></i>';
     }
 });

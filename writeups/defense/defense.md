@@ -1375,28 +1375,5 @@ SMB         10.1.212.125    445    DC               FLAG[$FLAG]
 
 ## Attack Chain Summary
 
-```
-Phishing (ODT) → Responder → kelly.johnson
-    ↓
-BloodHound → Support Portal → Ticket 2417 (HELPDESK01$ manual password)
-    ↓
-Timeroast → Crack HELPDESK01$ → WriteOwner on servicedesk
-    ↓
-GenericAll → AddMember → ForceChangePassword on jason.caldwell / luke.harrison
-    ↓
-luke.harrison → WriteProperty on jason.caldwell logonHours → Clear restriction
-    ↓
-jason.caldwell → WinRM → MariaDB creds → Crack MD5 → Spray → caleb.turner
-    ↓
-caleb.turner → IT OU Operators → Move oscar.mazerath (IT-Tier1 → IT-Tier3) → Full control
-    ↓
-oscar.mazerath → Targeted Kerberoast (RC4 downgrade) → Crack → ryan.cole
-    ↓
-ryan.cole → RDP → SSH Tool → SSHlog → Capture ITOPS01$ creds
-    ↓
-ITOPS01$ → WriteDACL on svc_delegate → GenericAll → Reset password
-    ↓
-svc_delegate → GenericWrite on HELPDESK01$ → Constrained Delegation (S4U)
-    ↓
-DCSync → Administrator NTLM → Pass-the-Ticket → Domain Admin 
-```
+<img width="1024" height="1536" alt="ChatGPT Image Sep 20, 2026, 07_07_49 PM" src="https://github.com/user-attachments/assets/813957fb-6d5a-44d3-9a6f-27028f86b0d9" />
+

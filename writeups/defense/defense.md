@@ -1,6 +1,6 @@
 # HSM Defense — Hack Smarter Labs Writeup
 
-<img width="900" height="312" alt="d177b89b-f2d5-4285-9b0f-b1ef248f0b67" src="https://github.com/user-attachments/assets/94e10125-9fe6-446f-9b8a-669d4e3c4de1" />
+<img width="1000" height="312" alt="d177b89b-f2d5-4285-9b0f-b1ef248f0b67" src="https://github.com/user-attachments/assets/94e10125-9fe6-446f-9b8a-669d4e3c4de1" />
 
 
 ## Scenario

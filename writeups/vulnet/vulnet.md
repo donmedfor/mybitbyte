@@ -1,9 +1,13 @@
 # VulnNet: Active — TryHackMe Walkthrough
 
 **Platform:** TryHackMe  
-**Room:** VulnNet: Active  
+
+**Room:** VulnNet: Active 
+
 **Difficulty:** Medium  
+
 **OS:** Windows
+
 **Attack Chain:** Unauthenticated Redis → NTLM Hash Capture → Password Cracking → SMB Access → Scheduled Task Abuse → PrintNightmare → SYSTEM Access  
 
 
@@ -329,5 +333,3 @@ impacket-psexec VULNNET.local/overmane:Passwd123@192.168.142.157
 | Write access to scheduled PowerShell script | Allowed arbitrary code execution as service account |
 | Missing PrintNightmare patches | Enabled local privilege escalation to SYSTEM |
 | Print Spooler service running unnecessarily | Attack surface for CVE-2021-34527 |
-
-management — particularly for well-known vulnerabilities like PrintNightmare. This walkthrough reinforces that a single weak point in an enterprise environment can lead to complete system compromise when chained with other vulnerabilities.

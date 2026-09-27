@@ -10,6 +10,9 @@
 
 **Kill Chain:** Guest SMB Recon → RID Cycling → Credential Spraying → Kerberoasting → Backup Share Loot → Pass-the-Hash → DCSync → Full Domain Takeover  
 
+<img width="860" height="367" alt="image" src="https://github.com/user-attachments/assets/f295f132-6727-4979-a088-b3ac20582f17" />
+
+
 ---
 
 ## 1. Reconnaissance

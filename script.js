@@ -2,7 +2,7 @@
 // CONFIG: Map page IDs to Markdown files
 // ============================================================
 
-const pageFiles = {Soupedecode.md
+const pageFiles = {
     'home':       'writeups/home/home.md',
     'casino':     'writeups/casino/casino.md',
     'second':     'writeups/second/second.md',

@@ -480,6 +480,10 @@ Because `FileServer$` packed DCSync privileges, the entire domain's credentials 
 
 <img width="971" height="613" alt="image" src="https://github.com/user-attachments/assets/06e6e38e-7178-4bc1-bb63-ea2a3b3e524c" />
 
+### 6.2 AI EXPLANATION
+
+Having a computer account `FileServer$` (indicated by the trailing $) in the Enterprise Admins Active Directory group grants that machine full, unrestricted administrative control over the entire Active Directory forest—including all domains, domain controllers, and trust relationships. This is an extreme security risk and almost certainly a critical misconfiguration or sign of malicious compromise: if an attacker gains local control of that file server, they can extract the computer account credentials and instantly leverage forest-wide admin rights to compromise the entire enterprise network.
+
 
 ```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]

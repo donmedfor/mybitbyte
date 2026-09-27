@@ -2,7 +2,7 @@
 // CONFIG: Map page IDs to Markdown files
 // ============================================================
 
-const pageFiles = {
+const pageFiles = {Soupedecode.md
     'home':       'writeups/home/home.md',
     'casino':     'writeups/casino/casino.md',
     'second':     'writeups/second/second.md',
@@ -11,6 +11,8 @@ const pageFiles = {
     'aftermatch': 'writeups/aftermatch/aftermatch.md',
     'defense':    'writeups/defense/defense.md',
     'vulnet':    'writeups/vulnet/vulnet.md',
+    'soupedecode':    'writeups/Soupedecode/Soupedecode.md',
+        
 };
 
 // ── Hardcoded pages (Tools, About) ──

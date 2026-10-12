@@ -10,7 +10,7 @@ A running list of the certifications I hold or am actively pursuing, along with 
 |------|-----------|----------|-------|
 | [FCP](fcp.md) | Fortinet Certified Professional | Fortinet | Network Security |
 | [CEH](ceh.md) | Certified Ethical Hacker | EC-Council | Offensive Security |
-| [CRTA](crta.md) | Certified Red Team Analyst | CyberDefenders | Red Teaming / Threat Hunting |
+| [CRTA](crta.md) | Certified Red Team Analyst | CyberWarFare Labs (CWL) | Red Teaming & Pentesting|
 
 ## 🟡 In Progress
 

@@ -12,6 +12,10 @@ const pageFiles = {
     'defense':    'writeups/defense/defense.md',
     'vulnet':    'writeups/vulnet/vulnet.md',
     'soupedecode':    'writeups/Soupedecode/Soupedecode.md',
+    'overview' : 'writeups/cert/overview.md',
+    'fcp' : 'writeups/cert/fcp.md',
+    'ceh' : 'writeups/cert/ceh.md',
+    'crta' : 'writeups/cert/crta.md',
         
 };
 

@@ -1,4 +1,3 @@
-
 # CRTA — Certified Red Team Analyst
 
 **Provider:** CyberWarFare Labs (CWL)  
@@ -79,6 +78,50 @@ This is the heart of CRTA: AD infrastructure enumeration, Kerberos-related attac
 **Credential Harvesting & Post-Exploitation**  
 Extracting credentials from memory or configuration (LSA dumps, Secretsdump, etc.), using them to expand access, and maintaining persistence.
 
+## Attack Chain Walkthrough (My Experience)
+
+The exam follows a clear chain: **external foothold → Linux privilege escalation → credential discovery → lateral movement to AD → DC compromise**. Below is how my run unfolded.
+
+### Phase 1 — Initial Foothold via LFI
+
+Enumerating the externally exposed host `172.26.10.11`, I found a web application vulnerable to **Local File Inclusion (LFI)**. Reading `/etc/passwd` confirmed the vulnerability and revealed the list of local users. Checking other common files, I located a set of **user credentials** on the box — likely from a config or backup file.
+
+### Phase 2 — SSH Access & Linux Privilege Escalation
+
+With the recovered credentials, I **SSH'd into the Linux machine** and began standard post-exploitation enumeration (`id`, `sudo -l`, SUID binaries, world-writable files, cron jobs).
+
+`sudo -l` showed I could run **`vi` as root** — a classic GTFOBins misconfiguration. Escaping the editor's shell gave me a root shell on the box.
+
+### Phase 3 — Pivoting into Containers & Discovering Domain Creds
+
+As root, I ran `docker ps` and found **two running containers**:
+
+- a **Node.js application**
+- a **Python server**
+
+Both exposed services I could reach from the host. Enumerating the Node.js app, I discovered another **LFI** — this time inside the container. Reading files through it, I found a configuration file containing **domain credentials** (a valid AD account).
+
+### Phase 4 — Discovering the Domain Controller
+
+Still hunting for internal context, I checked `/var/log/auth.log`. It contained **SSH attempts from an unfamiliar internal IP** — which matched the shape of a **Domain Controller**. Using the domain credentials I had just recovered, I authenticated successfully against that host.
+
+### Phase 5 — AD Enumeration with BloodHound
+
+With valid domain credentials in hand, I ran **BloodHound** to map the environment.
+
+The output showed my user was a member of the **Backup Operators** group — a high-impact finding. Members of this group effectively hold **`SeBackupPrivilege`** on domain-joined machines, which bypasses normal file ACLs.
+
+### Phase 6 — Backup Operators → LSA Dump → Domain Compromise
+
+Abusing `SeBackupPrivilege`, I performed the classic **Backup Operators attack**:
+
+1. Enabled `SeBackupPrivilege` in my session.
+2. Used **`diskshadow`** (or an equivalent shadow-copy technique) to snapshot the target volume.
+3. Copied the **SAM**, **SYSTEM**, and **SECURITY** registry hives out of the shadow copy.
+4. Ran **`secretsdump.py`** against the dumped hives to extract **LSA secrets and local hashes**.
+
+This yielded local administrator credentials that unlocked further access. From there, the chain continued to the **Domain Controller at `10.10.10.100`**, where I retrieved the objective file on the Administrator's Desktop.
+
 ## Preparation Strategy
 
 **1. Build a solid AD foundation first**
@@ -104,6 +147,15 @@ Six hours feels short during the actual exam. Practice **time-boxing** each phas
 **6. Prepare your environment ahead of time**
 
 Install and configure your attacking machine with all the tools you plan to use **before** the exam day. Test your VPN connection and ensure your internet is stable.
+
+## Key Takeaways
+
+- **LFI chains can go deep.** A single LFI on the external host led to `/etc/passwd`, then credentials, then SSH, then root, then containers, then domain creds. Always keep reading files — the next link in the chain is often one directory away.
+- **`sudo -l` should be the first thing you run** on any Linux box. A GTFOBins-eligible binary (`vi`, `find`, `less`, etc.) is a free root shell.
+- **Containers are not a boundary.** Once you're root on the host, `docker ps` is reconnaissance — internal services often hold secrets the host doesn't.
+- **`/var/log/auth.log` is underrated.** Failed SSH attempts from internal IPs are a strong hint at the AD environment's location.
+- **BloodHound is non-negotiable.** It's how you spot group memberships (like `Backup Operators`) that turn a low-privilege user into a domain-level threat.
+- **`Backup Operators` = `SeBackupPrivilege` = game over.** Memorize the diskshadow → hives → `secretsdump` chain before the exam.
 
 ## Overall Assessment
 

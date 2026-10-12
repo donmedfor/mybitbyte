@@ -34,76 +34,54 @@ The lab is accessed via an **OpenVPN configuration file (`.ovpn`)** provided aft
 1. **Import the `.ovpn` file** into your preferred virtual environment (such as VMware Workstation or VirtualBox).
 2. **Connect** to establish the VPN tunnel. No manual configuration is required.
 
-Once connected, you are assigned a **VPN IP address** (e.g., from the `10.10.200.0/24` range), which serves as your foothold from which all attacks originate.
+Once connected, you are assigned a **VPN IP address** on the examination network, which serves as your foothold from which all attacks originate.
 
-### Network Topology
+### Exam Network Topology
 
-The exam environment simulates a **corporate network with multiple segregated segments**, including an external-facing range and a separate internal network that you must discover and pivot into. A typical layout includes:
+The exam environment consists of two segregated networks: an **external VPN scope** you have direct access to, and a **hidden internal network** you must discover and pivot into.
 
-- **External VPN scope** — the range you have direct access to after connecting. This contains the externally exposed target(s) where the engagement begins. The gateway address in this range is explicitly **out of scope** and must not be touched.
-- **Initial target** — a single externally exposed host (e.g., `172.26.10.11` or `192.168.80.10`) that serves as your initial foothold into the environment.
-- **Internal network** — a separate, segregated range (e.g., `10.10.10.0/24` or `192.168.98.0/24`) that is **not directly reachable** from your VPN. You must perform **network pivoting** to access it.
-- **Domain Controller** — the final high-value target residing on the internal network (e.g., `10.10.10.100`), where the final objective file is located.
+```
+┌──────────────────────────────────────────────────────────┐
+│                     ATTACKER (Kali)                      │
+│                  VPN IP: 172.26.10.x                     │
+└────────────────────────┬─────────────────────────────────┘
+                         │ OpenVPN Tunnel
+                         ▼
+┌──────────────────────────────────────────────────────────┐
+│              EXTERNAL NETWORK (VPN Scope)                │
+│                   172.26.10.0/24                         │
+│                                                          │
+│   ┌────────────────────┐      ┌──────────────────────┐   │
+│   │ Gateway (OOS)      │      │  Initial Target      │   │
+│   │ 172.26.10.1        │      │  172.26.10.11        │   │
+│   │ ⚠ DO NOT TOUCH     │      │  (foothold)          │   │
+│   └────────────────────┘      └──────────┬───────────┘   │
+└──────────────────────────────────────────┼───────────────┘
+                                           │ pivot
+                                           ▼
+┌──────────────────────────────────────────────────────────┐
+│              INTERNAL NETWORK (discovered)               │
+│                    10.10.10.0/24                         │
+│                                                          │
+│              ┌──────────────────────────┐                │
+│              │   Domain Controller      │                │
+│              │   10.10.10.100           │                │
+│              │   (final objective)      │                │
+│              └──────────────────────────┘                │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Network Scope Summary
+
+| Segment | Range | Notes |
+|---|---|---|
+| VPN Scope | `172.26.10.0/24` | Directly reachable after connecting |
+| Out of Scope | `172.26.10.1` | Gateway — **do not touch** |
+| Initial Target | `172.26.10.11` | Externally exposed host (initial foothold) |
+| Internal Network | `10.10.10.0/24` | Discovered later; not directly reachable |
+| Domain Controller | `10.10.10.100` | Final high-value target |
 
 Because the internal network is segmented from the external range, **pivoting is a mandatory skill** for this exam. You will need to manually set up tunneling and port forwarding to reach the internal hosts.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                            INTERNET                             │
-│                                                                 │
-│  ┌───────▼───────┐                                              │
-│  │  VPN Network  │                                              │
-│  │ 10.10.200.0/24│                                              │
-│  └───────┬───────┘                                              │
-│          │                                                      │
-│  ┌───────▼───────┐                                              │
-│  │ External Host │                                              │
-│  │ 192.168.80.10 │                                              │
-│  └───────┬───────┘                                              │
-│          │                                                      │
-│  ┌───────▼───────┐                                              │
-│  │ Internal Net  │                                              │
-│  │192.168.98.0/24│                                              │
-│  └───────┬───────┘                                              │
-│          │                                                      │
-│  ┌───────┼──────────────────────────────┐                       │
-│  │       │                              │                       │
-│  ▼       ▼                              ▼                       │
-┌────▼────┐ ┌────▼────┐             ┌────▼────┐                  │
-│Parent DC│ │Child DC │             │  MGMT   │                  │
-│   .2    │ │  .120   │             │   .30   │                  │
-└─────────┘ └─────────┘             └─────────┘                  │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-**Note:** The IP ranges shown above (e.g., `192.168.80.0/24`) are from the practice lab. The actual exam may use different ranges (e.g., VPN Scope `172.26.10.0/24`, Internal Network `10.10.10.0/24`).
-
-### Host Roles & Services
-
-| IP Address | Hostname | Role | Services |
-|------------|----------|------|----------|
-| `192.168.80.10` | `app-server` | External Entry Point (DMZ) | SSH, HTTP |
-| `192.168.98.2` | `DC01` | Parent Domain Controller | DNS, LDAP, Kerberos, SMB |
-| `192.168.98.30` | `MGMT` | Management Server | SMB, WinRM |
-| `192.168.98.120` | `CDC` | Child Domain Controller | DNS, LDAP, Kerberos, SMB |
-| `192.168.98.15` | (pivot) | Internal Ubuntu Server | SSH, HTTP |
-
-### Network Segments
-
-**External Network (DMZ)**
-- **Range:** `192.168.80.0/24` (practice lab) / `172.26.10.0/24` (actual exam)
-- **Purpose:** Contains externally exposed services.
-- **Out of Scope:** The gateway address (e.g., `192.168.80.1` or `172.26.10.1`) is explicitly **out of scope** and must not be touched.
-- **Initial Target:** A single externally exposed host (e.g., `192.168.80.10` or `172.26.10.11`) serves as the initial foothold.
-
-**Internal Network**
-- **Range:** `192.168.98.0/24` (practice lab) / `10.10.10.0/24` (actual exam)
-- **Purpose:** Contains the Active Directory environment and high-value targets.
-- **Access:** **Not directly reachable** from the VPN. Network pivoting is mandatory.
-- **Domain Controllers:**
-  - **Parent DC:** `DC01` at `192.168.98.2`
-  - **Child DC:** `CDC` at `192.168.98.120`
-  - **Domain Structure:** Parent domain `warfare.corp`, child domain `child.warfare.corp`.
 
 ### Environment Reset
 

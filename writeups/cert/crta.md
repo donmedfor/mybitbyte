@@ -34,11 +34,11 @@ The lab is accessed via an **OpenVPN configuration file (`.ovpn`)** provided aft
 1. **Import the `.ovpn` file** into your preferred virtual environment (such as VMware Workstation or VirtualBox).
 2. **Connect** to establish the VPN tunnel. No manual configuration is required.
 
-Once connected, you are assigned a **VPN IP address** on the examination network, which serves as your foothold from which all attacks originate.
+Once connected, you are assigned a **VPN IP address** on the examination network (e.g., `172.26.10.x`), which serves as your foothold from which all attacks originate.
 
 ### Exam Network Topology
 
-The exam environment consists of two segregated networks: an **external VPN scope** you have direct access to, and a **hidden internal network** you must discover and pivot into.
+The VPN tunnel grants **direct access to both network segments** — no pivoting is required. You can reach the external scope and the internal `10.10.10.0/24` range straight from your attacking machine.
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -46,6 +46,7 @@ The exam environment consists of two segregated networks: an **external VPN scop
 │                  VPN IP: 172.26.10.x                     │
 └────────────────────────┬─────────────────────────────────┘
                          │ OpenVPN Tunnel
+                         │ (direct access to both ranges)
                          ▼
 ┌──────────────────────────────────────────────────────────┐
 │              EXTERNAL NETWORK (VPN Scope)                │
@@ -55,12 +56,13 @@ The exam environment consists of two segregated networks: an **external VPN scop
 │   │ Gateway (OOS)      │      │  Initial Target      │   │
 │   │ 172.26.10.1        │      │  172.26.10.11        │   │
 │   │ ⚠ DO NOT TOUCH     │      │  (foothold)          │   │
-│   └────────────────────┘      └──────────┬───────────┘   │
-└──────────────────────────────────────────┼───────────────┘
-                                           │ pivot
-                                           ▼
+│   └────────────────────┘      └──────────────────────┘   │
+└──────────────────────────────────────────────────────────┘
+                         │
+                         │ direct reachability
+                         ▼
 ┌──────────────────────────────────────────────────────────┐
-│              INTERNAL NETWORK (discovered)               │
+│              INTERNAL NETWORK (AD Environment)           │
 │                    10.10.10.0/24                         │
 │                                                          │
 │              ┌──────────────────────────┐                │
@@ -78,10 +80,8 @@ The exam environment consists of two segregated networks: an **external VPN scop
 | VPN Scope | `172.26.10.0/24` | Directly reachable after connecting |
 | Out of Scope | `172.26.10.1` | Gateway — **do not touch** |
 | Initial Target | `172.26.10.11` | Externally exposed host (initial foothold) |
-| Internal Network | `10.10.10.0/24` | Discovered later; not directly reachable |
+| Internal Network | `10.10.10.0/24` | Directly reachable via VPN (no pivot needed) |
 | Domain Controller | `10.10.10.100` | Final high-value target |
-
-Because the internal network is segmented from the external range, **pivoting is a mandatory skill** for this exam. You will need to manually set up tunneling and port forwarding to reach the internal hosts.
 
 ### Environment Reset
 
@@ -89,10 +89,9 @@ The lab environment **resets automatically every 24 hours** to ensure stability.
 
 ### Practical Considerations
 
-- Ensure your **internet connection is stable** at least one hour before the exam, as connectivity issues during pivoting can be frustrating and disruptive.
+- Ensure your **internet connection is stable** at least one hour before the exam, as connectivity issues can be frustrating and disruptive.
 - The lab is a **shared environment** among all students, so if another candidate misconfigures a machine, you may need to contact support and wait for a reset.
 - You will need to install and configure your own **attacking machine** (typically Kali Linux) with the tools you plan to use before connecting to the VPN.
-- The **pivoting process** (using tools like Ligolo-ng, proxychains, or chisel) is a critical skill, as the internal network is segmented from the external range.
 
 ## Core Skill Areas
 
@@ -104,9 +103,6 @@ Understanding the overall red team workflow and adversary simulation mindset, pl
 **External & Internal Attack Operations**  
 Enumerating and exploiting externally exposed services, then continuing attacks once inside the internal network.
 
-**Network Pivoting & Tunneling**  
-Manually setting up port forwarding and tunnels to move from an external foothold into the internal network—a critical part of the exam, as the internal range is not directly reachable.
-
 **Active Directory Enumeration & Attacks**  
 This is the heart of CRTA: AD infrastructure enumeration, Kerberos-related attacks (including Golden Ticket and Silver Ticket techniques), privilege escalation, and lateral movement.
 
@@ -117,7 +113,7 @@ Extracting credentials from memory or configuration (LSA dumps, Secretsdump, etc
 
 **1. Build a solid AD foundation first**
 
-Before booking the exam, make sure you can independently perform AD enumeration, privilege escalation, lateral movement, and pivoting. Practice with TryHackMe's AD rooms (Breaching AD, Attacking Kerberos, Exploiting AD, etc.) and Hack The Box retired machines or Pro Labs.
+Before booking the exam, make sure you can independently perform AD enumeration, privilege escalation, and lateral movement. Practice with TryHackMe's AD rooms (Breaching AD, Attacking Kerberos, Exploiting AD, etc.) and Hack The Box retired machines or Pro Labs.
 
 **2. Enumeration is everything**
 
@@ -125,7 +121,7 @@ Multiple successful candidates emphasize that **about 80% of exam time should be
 
 **3. Know the tools but don't rely on them**
 
-Tools you should be comfortable with include: enumeration tools like nmap, BloodHound, PowerView; pivoting tools like ligolo-ng, proxychains, chisel; and AD attack tools like Impacket, CrackMapExec, Rubeus. But understanding **native commands** (e.g., `whoami`, `net group`, `nltest`) is equally important—stealth often favors built-in methods over noisy tools.
+Tools you should be comfortable with include: enumeration tools like nmap, BloodHound, PowerView; and AD attack tools like Impacket, CrackMapExec, Rubeus. But understanding **native commands** (e.g., `whoami`, `net group`, `nltest`) is equally important—stealth often favors built-in methods over noisy tools.
 
 **4. Practice full attack chain thinking**
 
@@ -137,7 +133,7 @@ Six hours feels short during the actual exam. Practice **time-boxing** each phas
 
 **6. Prepare your environment ahead of time**
 
-Install and configure your attacking machine with all the tools you plan to use **before** the exam day. Test your VPN connection and ensure your internet is stable. Remember that the internal network requires pivoting—practice this specifically, as it's a common stumbling block.
+Install and configure your attacking machine with all the tools you plan to use **before** the exam day. Test your VPN connection and ensure your internet is stable.
 
 ## Overall Assessment
 

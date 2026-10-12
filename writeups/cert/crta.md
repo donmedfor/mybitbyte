@@ -1,3 +1,4 @@
+
 # CRTA — Certified Red Team Analyst
 
 **Provider:** CyberWarFare Labs (CWL)  
@@ -40,38 +41,7 @@ Once connected, you are assigned a **VPN IP address** on the examination network
 
 The VPN tunnel grants **direct access to both network segments** — no pivoting is required. You can reach the external scope and the internal `10.10.10.0/24` range straight from your attacking machine.
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                     ATTACKER (Kali)                      │
-│                  VPN IP: 172.26.10.x                     │
-└────────────────────────┬─────────────────────────────────┘
-                         │ OpenVPN Tunnel
-                         │ (direct access to both ranges)
-                         ▼
-┌──────────────────────────────────────────────────────────┐
-│              EXTERNAL NETWORK (VPN Scope)                │
-│                   172.26.10.0/24                         │
-│                                                          │
-│   ┌────────────────────┐      ┌──────────────────────┐   │
-│   │ Gateway (OOS)      │      │  Initial Target      │   │
-│   │ 172.26.10.1        │      │  172.26.10.11        │   │
-│   │ ⚠ DO NOT TOUCH     │      │  (foothold)          │   │
-│   └────────────────────┘      └──────────────────────┘   │
-└──────────────────────────────────────────────────────────┘
-                         │
-                         │ direct reachability
-                         ▼
-┌──────────────────────────────────────────────────────────┐
-│              INTERNAL NETWORK (AD Environment)           │
-│                    10.10.10.0/24                         │
-│                                                          │
-│              ┌──────────────────────────┐                │
-│              │   Domain Controller      │                │
-│              │   10.10.10.100           │                │
-│              │   (final objective)      │                │
-│              └──────────────────────────┘                │
-└──────────────────────────────────────────────────────────┘
-```
+<img width="1536" height="1024" alt="Layered Network Attack Path Diagram" src="https://github.com/user-attachments/assets/a3f18f38-0e76-467a-81de-56a35630fe2f" />
 
 ### Network Scope Summary
 

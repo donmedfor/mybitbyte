@@ -13,6 +13,7 @@ const pageFiles = {
     'vulnet':    'writeups/vulnet/vulnet.md',
     'soupedecode':    'writeups/Soupedecode/Soupedecode.md',
     'kitsune' : 'writeups/kitsune/kitsune.md',
+    'abducted' : 'writeups/abducted/abducted.md',
     'overview' : 'writeups/cert/overview.md',
     'fcp' : 'writeups/cert/fcp.md',
     'ceh' : 'writeups/cert/ceh.md',

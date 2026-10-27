@@ -192,5 +192,3 @@ This machine demonstrates how several small weaknesses can be chained into full 
 - Hash reuse between local and domain administrators can turn a limited compromise into full domain takeover.
 
 ---
-
-*Paraphrased from the 0xdf walkthrough of HackTheBox: Checkpoint (2026-10-24).*

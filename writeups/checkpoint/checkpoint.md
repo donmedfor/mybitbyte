@@ -4,7 +4,7 @@
 > **Target:** Windows Server 2025 Domain Controller  
 > **Scenario:** Assume-breach Active Directory lab
 
-<img width="800" height="800" alt="a1e5130b-96c5-4d6b-a7c3-aaa82554d1b2-1780052391" src="https://github.com/user-attachments/assets/6ed737bb-d1a3-4356-ba00-246e1bac3875" />
+<img width="400" height="400" alt="a1e5130b-96c5-4d6b-a7c3-aaa82554d1b2-1780052391" src="https://github.com/user-attachments/assets/6ed737bb-d1a3-4356-ba00-246e1bac3875" />
 
 ---
 

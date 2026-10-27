@@ -30,11 +30,12 @@ Hi, I'm a cybersecurity engineer passionate about offensive security. This hub d
 
 | Machine | Platform | Date |
 |---------|----------|------|
-| <a href="#" data-page="casino">Casino</a> | HackSmarter Labs | 2026 |
-| <a href="#" data-page="second">Second (AWS LAB)</a> | HackSmarter Labs | 2026 |
 | <a href="#" data-page="vulnet">VulnNet: Active </a> | TryHackMe | 2026 |
 | <a href="#" data-page="soupedecode">Soupedecode01 </a> | TryHackMe | 2026 |
 | <a href="#" data-page="abducted">Abducted </a> | HackTheBox | 2026 |
+| <a href="#" data-page="checkpoint">Checkpoint </a> | HackTheBox | 2026 |
+| <a href="#" data-page="second">Second (AWS LAB)</a> | HackSmarter Labs | 2026 |
+| <a href="#" data-page="casino">Casino</a> | HackSmarter Labs | 2026 |
 | <a href="#" data-page="mapper">Mapper </a> | HackSmarter Labs | 2026 |
 | <a href="#" data-page="walnut">Walnut </a> | HackSmarter Labs | 2026 |
 | <a href="#" data-page="aftermatch">Aftermath </a> | HackSmarter Labs | 2026 |

@@ -14,6 +14,7 @@ const pageFiles = {
     'soupedecode':    'writeups/Soupedecode/Soupedecode.md',
     'kitsune' : 'writeups/kitsune/kitsune.md',
     'abducted' : 'writeups/abducted/abducted.md',
+    'checkpoint' : 'writeups/checkpoint/checkpoint.md',
     'overview' : 'writeups/cert/overview.md',
     'fcp' : 'writeups/cert/fcp.md',
     'ceh' : 'writeups/cert/ceh.md',

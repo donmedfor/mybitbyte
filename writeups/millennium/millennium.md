@@ -1,4 +1,4 @@
-# Millennium — Hack Smarter Labs Writeup
+# Millennium - Hack Smarter Labs Writeup
 
 | | |
 |---|---|

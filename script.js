@@ -16,6 +16,7 @@ const pageFiles = {
     'abducted' : 'writeups/abducted/abducted.md',
     'checkpoint' : 'writeups/checkpoint/checkpoint.md',
     'overview' : 'writeups/cert/overview.md',
+    'millennium' : 'writeups/millennium/millennium.md',
     'fcp' : 'writeups/cert/fcp.md',
     'ceh' : 'writeups/cert/ceh.md',
     'crta' : 'writeups/cert/crta.md',

